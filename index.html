@@ -60,10 +60,50 @@
             </div>
         </div>
 
+        <!-- Neue Frage: Kanzlei-Art -->
+        <div id="practice-type" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 20%"></div>
+            </div>
+            <div class="question-container">
+                <h2>In welchem Bereich ist Ihre Kanzlei hauptsächlich tätig?</h2>
+                <p class="explanation">Diese Information hilft uns, branchenspezifische Empfehlungen zu geben.</p>
+                <div class="options-vertical">
+                    <button class="option-btn-large" onclick="selectPracticeType('tax')">
+                        <div class="option-content">
+                            <span class="option-icon">📊</span>
+                            <div class="option-text">
+                                <strong>Steuerberatung</strong>
+                                <p>Steuerberatung, Buchhaltung, Jahresabschlüsse, Lohnabrechnung</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="option-btn-large" onclick="selectPracticeType('law')">
+                        <div class="option-content">
+                            <span class="option-icon">⚖️</span>
+                            <div class="option-text">
+                                <strong>Rechtsberatung</strong>
+                                <p>Rechtsberatung, Prozessführung, Vertragsrecht, Familienrecht</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="option-btn-large" onclick="selectPracticeType('mixed')">
+                        <div class="option-content">
+                            <span class="option-icon">🏢</span>
+                            <div class="option-text">
+                                <strong>Gemischte Kanzlei</strong>
+                                <p>Sowohl Steuerberatung als auch Rechtsberatung</p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Mitarbeiterzahl -->
         <div id="team-size" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 24%"></div>
+                <div class="progress" style="width: 26%"></div>
             </div>
             <div class="question-container">
                 <h2>Wie viele Mitarbeiter hat Ihre Kanzlei?</h2>
@@ -80,7 +120,7 @@
         <!-- Neue Frage 1: Digitalisierungsgrad -->
         <div id="digitalization-level" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 32%"></div>
+                <div class="progress" style="width: 34%"></div>
             </div>
             <div class="question-container">
                 <h2>Wie würden Sie den aktuellen Digitalisierungsgrad Ihrer Kanzlei einschätzen?</h2>
@@ -105,11 +145,11 @@
         <!-- Neue Frage 2: Zeitaufwand für Routineaufgaben -->
         <div id="routine-time" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 40%"></div>
+                <div class="progress" style="width: 42%"></div>
             </div>
             <div class="question-container">
-                <h2>Wie viel Zeit verbringt Ihr Team täglich mit Routineaufgaben?</h2>
-                <p class="explanation">Denken Sie an Aktenanlage, Terminplanung, Standardkorrespondenz, Fristenüberwachung.</p>
+                <h2 id="routineTimeQuestion">Wie viel Zeit verbringt Ihr Team täglich mit Routineaufgaben?</h2>
+                <p class="explanation" id="routineTimeExplanation">Denken Sie an Aktenanlage, Terminplanung, Standardkorrespondenz, Fristenüberwachung.</p>
                 <div class="options-vertical">
                     <button class="option-btn" onclick="selectRoutineTime('low')">
                         <strong>Weniger als 2 Stunden täglich</strong><br>
@@ -130,11 +170,11 @@
         <!-- Neue Frage 3: Mandantenkommunikation -->
         <div id="client-communication" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 48%"></div>
+                <div class="progress" style="width: 50%"></div>
             </div>
             <div class="question-container">
-                <h2>Wie läuft die Kommunikation mit Ihren Mandanten hauptsächlich ab?</h2>
-                <p class="explanation">Diese Information hilft uns, Ihre Kommunikationsprozesse zu verstehen.</p>
+                <h2 id="clientCommQuestion">Wie läuft die Kommunikation mit Ihren Mandanten hauptsächlich ab?</h2>
+                <p class="explanation" id="clientCommExplanation">Diese Information hilft uns, Ihre Kommunikationsprozesse zu verstehen.</p>
                 <div class="options-vertical">
                     <button class="option-btn" onclick="selectClientCommunication('traditional')">
                         <strong>Überwiegend traditionell</strong><br>
@@ -155,11 +195,11 @@
         <!-- Neue Frage 4: Größte Herausforderung -->
         <div id="main-challenge" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 56%"></div>
+                <div class="progress" style="width: 58%"></div>
             </div>
             <div class="question-container">
-                <h2>Was ist aktuell Ihre größte betriebliche Herausforderung?</h2>
-                <p class="explanation">Wählen Sie den Bereich aus, der Ihnen die meisten Kopfschmerzen bereitet.</p>
+                <h2 id="mainChallengeQuestion">Was ist aktuell Ihre größte betriebliche Herausforderung?</h2>
+                <p class="explanation" id="mainChallengeExplanation">Wählen Sie den Bereich aus, der Ihnen die meisten Kopfschmerzen bereitet.</p>
                 <div class="options-vertical">
                     <button class="option-btn" onclick="selectMainChallenge('capacity')">
                         <strong>Kapazitätsengpässe</strong><br>
@@ -184,7 +224,7 @@
         <!-- Neue Frage 5: KI-Erfahrung -->
         <div id="ai-experience" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 64%"></div>
+                <div class="progress" style="width: 66%"></div>
             </div>
             <div class="question-container">
                 <h2>Welche Erfahrungen haben Sie bereits mit KI-Tools gemacht?</h2>
@@ -213,7 +253,7 @@
         <!-- Hauptfrage: Pfad-Auswahl -->
         <div id="main-question" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 72%"></div>
+                <div class="progress" style="width: 74%"></div>
             </div>
             <div class="question-container">
                 <h2 id="personalizedMainQuestion">Wenn Sie einen Bereich Ihrer Kanzlei sofort verbessern könnten, welcher wäre das?</h2>
@@ -252,11 +292,12 @@
         <!-- Workflow-Pfad -->
         <div id="workflow-path" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 80%"></div>
+                <div class="progress" style="width: 82%"></div>
             </div>
             <div class="question-container">
-                <h2>Welche dieser Aufgaben frisst aktuell die meiste Zeit?</h2>
-                <div class="options-vertical">
+                <h2 id="workflowDetailQuestion">Welche dieser Aufgaben frisst aktuell die meiste Zeit?</h2>
+                <div class="options-vertical" id="workflowOptions">
+                    <!-- Optionen werden dynamisch basierend auf practiceType geladen -->
                     <button class="option-btn" onclick="selectWorkflowDetail('mandanten')">Die Anlage neuer Mandanten und Akten in unseren Systemen</button>
                     <button class="option-btn" onclick="selectWorkflowDetail('fristen')">Die Überwachung von Fristen und Wiedervorlagen</button>
                     <button class="option-btn" onclick="selectWorkflowDetail('termine')">Die Planung und Koordination von Terminen</button>
@@ -268,11 +309,12 @@
         <!-- Kommunikations-Pfad -->
         <div id="communication-path" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 80%"></div>
+                <div class="progress" style="width: 82%"></div>
             </div>
             <div class="question-container">
-                <h2>Was ist dabei die größte Herausforderung für Ihr Team?</h2>
-                <div class="options-vertical">
+                <h2 id="communicationDetailQuestion">Was ist dabei die größte Herausforderung für Ihr Team?</h2>
+                <div class="options-vertical" id="communicationOptions">
+                    <!-- Optionen werden dynamisch basierend auf practiceType geladen -->
                     <button class="option-btn" onclick="selectCommunicationDetail('unterbrechungen')">Wir werden oft durch Anrufe mit Standardfragen aus der konzentrierten Arbeit gerissen</button>
                     <button class="option-btn" onclick="selectCommunicationDetail('erreichbarkeit')">Mandanten beschweren sich über mangelnde Erreichbarkeit außerhalb der Geschäftszeiten</button>
                     <button class="option-btn" onclick="selectCommunicationDetail('termine')">Die telefonische Terminvereinbarung ist ein ständiges Hin und Her</button>
@@ -284,11 +326,12 @@
         <!-- Rechtlicher Pfad -->
         <div id="legal-path" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 80%"></div>
+                <div class="progress" style="width: 82%"></div>
             </div>
             <div class="question-container">
-                <h2>Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?</h2>
-                <div class="options-vertical">
+                <h2 id="legalDetailQuestion">Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?</h2>
+                <div class="options-vertical" id="legalOptions">
+                    <!-- Optionen werden dynamisch basierend auf practiceType geladen -->
                     <button class="option-btn" onclick="selectLegalDetail('recherche')">Bei der Recherche nach ähnlichen, bereits bearbeiteten Fällen in unserer eigenen Datenbank</button>
                     <button class="option-btn" onclick="selectLegalDetail('rechtsprechung')">Bei der Suche nach aktueller, externer Rechtsprechung zu einem Fall</button>
                     <button class="option-btn" onclick="selectLegalDetail('formulierung')">Beim Formulieren des Antwortschreibens im einheitlichen Kanzleistil</button>
@@ -300,7 +343,7 @@
         <!-- E-Mail Eingabe -->
         <div id="email-screen" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 90%"></div>
+                <div class="progress" style="width: 92%"></div>
             </div>
             <div class="question-container">
                 <h2 id="personalizedEmailTitle">Fast geschafft!</h2>

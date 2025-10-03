@@ -3,6 +3,7 @@ let quizData = {
     userName: '',
     companyName: '',
     website: '',
+    practiceType: '',        // Neu: Steuerberater, Rechtsanwalt oder gemischt
     teamSize: '',
     digitalizationLevel: '',
     routineTime: '',
@@ -19,18 +20,19 @@ const screens = [
     'welcome-screen',
     'personal-data', 
     'company-info',
-    'team-size',
-    'digitalization-level',    // Index 4
-    'routine-time',           // Index 5
-    'client-communication',   // Index 6
-    'main-challenge',         // Index 7
-    'ai-experience',          // Index 8
-    'main-question',          // Index 9
-    'workflow-path',          // Index 10
-    'communication-path',     // Index 11
-    'legal-path',            // Index 12
-    'email-screen',          // Index 13
-    'results-screen'         // Index 14
+    'practice-type',          // Index 3 - Neu hinzugefügt
+    'team-size',              // Index 4
+    'digitalization-level',   // Index 5
+    'routine-time',           // Index 6
+    'client-communication',   // Index 7
+    'main-challenge',         // Index 8
+    'ai-experience',          // Index 9
+    'main-question',          // Index 10
+    'workflow-path',          // Index 11
+    'communication-path',     // Index 12
+    'legal-path',            // Index 13
+    'email-screen',          // Index 14
+    'results-screen'         // Index 15
 ];
 
 // Screen-Navigation
@@ -39,18 +41,18 @@ function nextScreen() {
     current.classList.remove('active');
     
     // Spezielle Logik für Pfad-Auswahl
-    if (currentScreen === 9) { // main-question
+    if (currentScreen === 10) { // main-question
         // Springe zum entsprechenden Pfad basierend auf der Auswahl
         if (quizData.selectedPath === 'workflow') {
-            currentScreen = 10; // workflow-path
+            currentScreen = 11; // workflow-path
         } else if (quizData.selectedPath === 'communication') {
-            currentScreen = 11; // communication-path
+            currentScreen = 12; // communication-path
         } else if (quizData.selectedPath === 'legal') {
-            currentScreen = 12; // legal-path
+            currentScreen = 13; // legal-path
         }
-    } else if (currentScreen >= 10 && currentScreen <= 12) {
+    } else if (currentScreen >= 11 && currentScreen <= 13) {
         // Von den Pfad-Screens direkt zur E-Mail-Eingabe
-        currentScreen = 13; // email-screen
+        currentScreen = 14; // email-screen
     } else {
         currentScreen++;
     }
@@ -66,17 +68,164 @@ function nextScreen() {
 function updatePersonalization() {
     const userName = quizData.userName;
     const teamSize = quizData.teamSize;
+    const practiceType = quizData.practiceType;
+    
+    // Branchenspezifische Anpassungen
+    if (practiceType) {
+        updateBranchSpecificContent(practiceType);
+    }
     
     // Hauptfrage personalisieren
-    if (currentScreen === 9 && userName && teamSize) {
+    if (currentScreen === 10 && userName && teamSize) {
         const mainQuestion = document.getElementById('personalizedMainQuestion');
         mainQuestion.textContent = `${userName}, wenn Sie einen Bereich Ihrer Kanzlei mit ${teamSize} Mitarbeitern sofort verbessern könnten, welcher wäre das?`;
     }
     
     // E-Mail-Titel personalisieren
-    if (currentScreen === 13 && userName) {
+    if (currentScreen === 14 && userName) {
         const emailTitle = document.getElementById('personalizedEmailTitle');
         emailTitle.textContent = `Fast geschafft, ${userName}!`;
+    }
+}
+
+// Branchenspezifische Inhalte anpassen
+function updateBranchSpecificContent(practiceType) {
+    // Routineaufgaben-Frage anpassen
+    if (currentScreen === 6) { // routine-time
+        const question = document.getElementById('routineTimeQuestion');
+        const explanation = document.getElementById('routineTimeExplanation');
+        
+        if (practiceType === 'tax') {
+            question.textContent = 'Wie viel Zeit verbringt Ihr Team täglich mit Routineaufgaben?';
+            explanation.textContent = 'Denken Sie an Mandantenstammdaten, Belege erfassen, Lohnabrechnungen, Jahresabschlüsse.';
+        } else if (practiceType === 'law') {
+            question.textContent = 'Wie viel Zeit verbringt Ihr Team täglich mit Routineaufgaben?';
+            explanation.textContent = 'Denken Sie an Aktenanlage, Fristenüberwachung, Schriftsatzerstellung, Recherche.';
+        }
+    }
+    
+    // Mandantenkommunikation anpassen
+    if (currentScreen === 7) { // client-communication
+        const question = document.getElementById('clientCommQuestion');
+        const explanation = document.getElementById('clientCommExplanation');
+        
+        if (practiceType === 'tax') {
+            question.textContent = 'Wie läuft die Kommunikation mit Ihren Mandanten hauptsächlich ab?';
+            explanation.textContent = 'Besonders während der Steuerperioden ist eine effiziente Kommunikation entscheidend.';
+        } else if (practiceType === 'law') {
+            question.textContent = 'Wie läuft die Kommunikation mit Ihren Mandanten hauptsächlich ab?';
+            explanation.textContent = 'Gerade bei laufenden Verfahren ist eine schnelle und zuverlässige Kommunikation wichtig.';
+        }
+    }
+    
+    // Hauptherausforderung anpassen
+    if (currentScreen === 8) { // main-challenge
+        const question = document.getElementById('mainChallengeQuestion');
+        const explanation = document.getElementById('mainChallengeExplanation');
+        
+        if (practiceType === 'tax') {
+            question.textContent = 'Was ist aktuell Ihre größte betriebliche Herausforderung?';
+            explanation.textContent = 'Denken Sie an Steuerfristen, Mandantenbetreuung, Digitalisierung der Buchhaltung.';
+        } else if (practiceType === 'law') {
+            question.textContent = 'Was ist aktuell Ihre größte betriebliche Herausforderung?';
+            explanation.textContent = 'Denken Sie an Fallbearbeitung, Recherche-Aufwand, Mandantenakquise, Prozessführung.';
+        }
+    }
+    
+    // Workflow-Details anpassen
+    if (currentScreen === 11 && practiceType) { // workflow-path
+        updateWorkflowOptions(practiceType);
+    }
+    
+    // Kommunikations-Details anpassen
+    if (currentScreen === 12 && practiceType) { // communication-path
+        updateCommunicationOptions(practiceType);
+    }
+    
+    // Legal-Details anpassen
+    if (currentScreen === 13 && practiceType) { // legal-path
+        updateLegalOptions(practiceType);
+    }
+}
+
+// Workflow-Optionen branchenspezifisch anpassen
+function updateWorkflowOptions(practiceType) {
+    const container = document.getElementById('workflowOptions');
+    const question = document.getElementById('workflowDetailQuestion');
+    
+    if (practiceType === 'tax') {
+        question.textContent = 'Welche dieser Aufgaben bindet bei Ihnen die meisten Ressourcen?';
+        container.innerHTML = `
+            <button class="option-btn" onclick="selectWorkflowDetail('stammdaten')">Pflege und Aktualisierung von Mandantenstammdaten</button>
+            <button class="option-btn" onclick="selectWorkflowDetail('belege')">Erfassung und Sortierung von Belegen und Unterlagen</button>
+            <button class="option-btn" onclick="selectWorkflowDetail('lohnabrechnung')">Erstellung von Lohn- und Gehaltsabrechnungen</button>
+            <button class="option-btn" onclick="selectWorkflowDetail('jahresabschluss')">Vorbereitung und Erstellung von Jahresabschlüssen</button>
+        `;
+    } else if (practiceType === 'law') {
+        question.textContent = 'Welche dieser Aufgaben frisst aktuell die meiste Zeit?';
+        container.innerHTML = `
+            <button class="option-btn" onclick="selectWorkflowDetail('aktenanlage')">Anlage neuer Mandate und Aktenführung</button>
+            <button class="option-btn" onclick="selectWorkflowDetail('fristen')">Überwachung von Fristen und Terminen</button>
+            <button class="option-btn" onclick="selectWorkflowDetail('schriftsaetze')">Erstellung von Schriftsätzen und Anträgen</button>
+            <button class="option-btn" onclick="selectWorkflowDetail('recherche')">Rechtliche Recherche und Fallvorbereitung</button>
+        `;
+    } else { // mixed
+        question.textContent = 'Welche dieser Aufgaben frisst aktuell die meiste Zeit?';
+        // Behalte die ursprünglichen allgemeinen Optionen
+    }
+}
+
+// Kommunikations-Optionen branchenspezifisch anpassen
+function updateCommunicationOptions(practiceType) {
+    const container = document.getElementById('communicationOptions');
+    const question = document.getElementById('communicationDetailQuestion');
+    
+    if (practiceType === 'tax') {
+        question.textContent = 'Was ist dabei die größte Herausforderung für Ihr Team?';
+        container.innerHTML = `
+            <button class="option-btn" onclick="selectCommunicationDetail('steuerperioden')">Überlastung während der Steuerperioden (März, Mai, Juli)</button>
+            <button class="option-btn" onclick="selectCommunicationDetail('unterlagen')">Ständige Nachfragen nach fehlenden Unterlagen und Belegen</button>
+            <button class="option-btn" onclick="selectCommunicationDetail('termine')">Terminkoordination für Besprechungen und Unterschriften</button>
+            <button class="option-btn" onclick="selectCommunicationDetail('status')">Mandanten fragen regelmäßig nach dem Status ihrer Steuererklärung</button>
+        `;
+    } else if (practiceType === 'law') {
+        question.textContent = 'Was ist dabei die größte Herausforderung für Ihr Team?';
+        container.innerHTML = `
+            <button class="option-btn" onclick="selectCommunicationDetail('dringlichkeit')">Mandanten erwarten sofortige Antworten bei dringenden Rechtsfragen</button>
+            <button class="option-btn" onclick="selectCommunicationDetail('verfahrensstatus')">Ständige Nachfragen zum Status laufender Verfahren</button>
+            <button class="option-btn" onclick="selectCommunicationDetail('termine')">Koordination von Gerichtsterminen und Besprechungen</button>
+            <button class="option-btn" onclick="selectCommunicationDetail('erreichbarkeit')">Mandanten beschweren sich über mangelnde Erreichbarkeit</button>
+        `;
+    } else { // mixed
+        question.textContent = 'Was ist dabei die größte Herausforderung für Ihr Team?';
+        // Behalte die ursprünglichen allgemeinen Optionen
+    }
+}
+
+// Legal-Optionen branchenspezifisch anpassen
+function updateLegalOptions(practiceType) {
+    const container = document.getElementById('legalOptions');
+    const question = document.getElementById('legalDetailQuestion');
+    
+    if (practiceType === 'tax') {
+        question.textContent = 'Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?';
+        container.innerHTML = `
+            <button class="option-btn" onclick="selectLegalDetail('steuerrecht')">Bei der Recherche aktueller steuerrechtlicher Änderungen</button>
+            <button class="option-btn" onclick="selectLegalDetail('vorlagen')">Bei der Erstellung standardisierter Vorlagen und Checklisten</button>
+            <button class="option-btn" onclick="selectLegalDetail('pruefung')">Bei der Plausibilitätsprüfung und Fehlersuche in Steuererklärungen</button>
+            <button class="option-btn" onclick="selectLegalDetail('beratung')">Bei der Vorbereitung von Steuerberatungsgesprächen</button>
+        `;
+    } else if (practiceType === 'law') {
+        question.textContent = 'Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?';
+        container.innerHTML = `
+            <button class="option-btn" onclick="selectLegalDetail('recherche')">Bei der Recherche nach ähnlichen, bereits bearbeiteten Fällen</button>
+            <button class="option-btn" onclick="selectLegalDetail('rechtsprechung')">Bei der Suche nach aktueller Rechtsprechung zu einem Fall</button>
+            <button class="option-btn" onclick="selectLegalDetail('formulierung')">Beim Formulieren von Schriftsätzen im einheitlichen Kanzleistil</button>
+            <button class="option-btn" onclick="selectLegalDetail('analyse')">Bei der Analyse und Bewertung komplexer Rechtsfragen</button>
+        `;
+    } else { // mixed
+        question.textContent = 'Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?';
+        // Behalte die ursprünglichen allgemeinen Optionen
     }
 }
 
@@ -113,6 +262,25 @@ document.addEventListener('DOMContentLoaded', function() {
         emailNext.disabled = !emailRegex.test(quizData.userEmail);
     });
 });
+
+// Kanzlei-Art auswählen
+function selectPracticeType(type) {
+    // Alle Buttons zurücksetzen
+    document.querySelectorAll('#practice-type .option-btn-large').forEach(btn => {
+        btn.style.borderColor = '#e0e0e0';
+        btn.style.background = 'white';
+    });
+    
+    // Ausgewählten Button markieren
+    event.target.style.borderColor = '#667eea';
+    event.target.style.background = '#f8f9ff';
+    quizData.practiceType = type;
+    
+    // Nach kurzer Verzögerung weiter
+    setTimeout(() => {
+        nextScreen();
+    }, 800);
+}
 
 // Team-Größe auswählen
 function selectTeamSize(size) {
@@ -318,6 +486,7 @@ Webseite: ${data.website}
 E-Mail: ${data.userEmail}
 
 **KANZLEI-PROFIL:**
+Kanzlei-Art: ${data.practiceType} (tax=Steuerberatung, law=Rechtsberatung, mixed=Gemischt)
 Mitarbeiterzahl: ${data.teamSize}
 Aktueller Digitalisierungsgrad: ${data.digitalizationLevel}
 Täglicher Zeitaufwand für Routineaufgaben: ${data.routineTime}
@@ -347,8 +516,35 @@ Erstelle basierend auf diesen umfassenden Informationen eine professionelle und 
 4. **Potenzial-Aufzeigung:** Zeige konkrete Verbesserungen auf (Zeitersparnis, Effizienzsteigerung, etc.)
 5. **Call-to-Action:** Lade zu einem kostenlosen Beratungsgespräch ein
 
-**STIL:** Professionell, beratend, lösungsorientiert, nicht zu werblich. Der Mehrwert für den Kunden steht im Vordergrund.
-**LÄNGE:** 400-500 Wörter`;
+**BRANCHENSPEZIFISCHE REGELN:**
+- Bei practiceType "tax" (Steuerberatung):
+  * Fokus auf Steuerfristen, Mandantenstammdaten, Belege, Jahresabschlüsse
+  * Betone Zeitersparnis während Steuerperioden (März, Mai, Juli)
+  * Workflow-Agenten für Buchhaltungsautomatisierung hervorheben
+  * Voice-Agenten für Entlastung bei Standardfragen zu Steuererklärungen
+  
+- Bei practiceType "law" (Rechtsberatung):
+  * Fokus auf Fallbearbeitung, Recherche, Schriftsätze, Fristenüberwachung
+  * Betone Effizienz bei Rechtsprechungsrecherche und Fallanalyse
+  * Web-App für Anwälte als Hauptprodukt positionieren
+  * Voice-Agenten für Mandantenbetreuung und Terminkoordination
+  
+- Bei practiceType "mixed" (Gemischte Kanzlei):
+  * Ausgewogene Darstellung beider Bereiche
+  * Betone Synergien zwischen Steuer- und Rechtsberatung
+  * Alle drei Produkte gleichwertig präsentieren
+
+**PERSONALISIERUNGS-REGELN:**
+- Bei digitalizationLevel "basic" → Sanfter Einstieg, Grundlagen erklären
+- Bei digitalizationLevel "advanced" → Direkt zu fortgeschrittenen Lösungen
+- Bei aiExperience "none" → KI-Vorteile erklären, Ängste nehmen
+- Bei aiExperience "advanced" → Auf bestehende Erfahrungen aufbauen
+- Bei routineTime "high" → Zeitersparnis stark betonen
+- Bei mainChallenge "capacity" → Entlastung und Skalierung fokussieren
+- Bei mainChallenge "efficiency" → Prozessoptimierung hervorheben
+
+**STIL:** Professionell, beratend, lösungsorientiert, nicht zu werblich. Der konkrete Mehrwert steht im Vordergrund.
+**LÄNGE:** 500-600 Wörter`;
 
     return prompt;
 }
