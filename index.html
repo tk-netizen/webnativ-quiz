@@ -44,8 +44,22 @@
             </div>
             <div class="question-container">
                 <h2>Wie dürfen wir Sie ansprechen?</h2>
-                <p class="explanation">Wir verwenden Ihren Namen, um die Analyse für Sie zu personalisieren.</p>
-                <input type="text" id="userName" placeholder="Ihr Name" class="input-field">
+                <p class="explanation">Wir verwenden diese Informationen, um die Analyse persönlich für Sie zu gestalten.</p>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Anrede</label>
+                    <div class="anrede-options">
+                        <button type="button" class="anrede-btn" onclick="selectAnrede('Herr')">Herr</button>
+                        <button type="button" class="anrede-btn" onclick="selectAnrede('Frau')">Frau</button>
+                        <button type="button" class="anrede-btn" onclick="selectAnrede('Divers')">Divers</button>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Vor- und Nachname</label>
+                    <input type="text" id="userName" placeholder="z.B. Dr. Maria Schneider" class="input-field">
+                </div>
+                
                 <button class="btn-primary" onclick="nextScreen()" disabled id="nameNext">Weiter</button>
             </div>
         </div>

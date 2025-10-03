@@ -1,5 +1,6 @@
 // Quiz-Daten und Zustand
 let quizData = {
+    anrede: '',              // Neu: Herr, Frau, Divers
     userName: '',
     companyName: '',
     website: '',
@@ -78,13 +79,17 @@ function updatePersonalization() {
     // Hauptfrage personalisieren
     if (currentScreen === 10 && userName && teamSize) {
         const mainQuestion = document.getElementById('personalizedMainQuestion');
-        mainQuestion.textContent = `${userName}, wenn Sie einen Bereich Ihrer Kanzlei mit ${teamSize} Mitarbeitern sofort verbessern könnten, welcher wäre das?`;
+        const anrede = quizData.anrede;
+        const fullName = anrede ? `${anrede} ${userName}` : userName;
+        mainQuestion.textContent = `${fullName}, wenn Sie einen Bereich Ihrer Kanzlei mit ${teamSize} Mitarbeitern sofort verbessern könnten, welcher wäre das?`;
     }
     
     // E-Mail-Titel personalisieren
     if (currentScreen === 14 && userName) {
         const emailTitle = document.getElementById('personalizedEmailTitle');
-        emailTitle.textContent = `Fast geschafft, ${userName}!`;
+        const anrede = quizData.anrede;
+        const fullName = anrede ? `${anrede} ${userName}` : userName;
+        emailTitle.textContent = `Fast geschafft, ${fullName}!`;
     }
 }
 
@@ -235,9 +240,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const nameInput = document.getElementById('userName');
     const nameNext = document.getElementById('nameNext');
     
+    function validateNameForm() {
+        const hasAnrede = quizData.anrede.length > 0;
+        const hasName = quizData.userName.length >= 2;
+        nameNext.disabled = !(hasAnrede && hasName);
+    }
+    
     nameInput.addEventListener('input', function() {
         quizData.userName = this.value.trim();
-        nameNext.disabled = quizData.userName.length < 2;
+        validateNameForm();
     });
     
     // Firmen-Eingabe
@@ -262,6 +273,24 @@ document.addEventListener('DOMContentLoaded', function() {
         emailNext.disabled = !emailRegex.test(quizData.userEmail);
     });
 });
+
+// Anrede auswählen
+function selectAnrede(anrede) {
+    // Alle Anrede-Buttons zurücksetzen
+    document.querySelectorAll('.anrede-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Ausgewählten Button markieren
+    event.target.classList.add('selected');
+    quizData.anrede = anrede;
+    
+    // Formular-Validierung aktualisieren
+    const nameInput = document.getElementById('userName');
+    const nameNext = document.getElementById('nameNext');
+    const hasName = nameInput.value.trim().length >= 2;
+    nameNext.disabled = !(anrede && hasName);
+}
 
 // Kanzlei-Art auswählen
 function selectPracticeType(type) {
@@ -476,6 +505,7 @@ function generateGPTPrompt(data) {
     let prompt = `Du bist ein Experte für Kanzlei-Digitalisierung und agierst als Berater für die Firma Webnativ. Erstelle eine personalisierte KI-Potenzialanalyse für:
 
 **KONTAKTDATEN:**
+Anrede: ${data.anrede}
 Name: ${data.userName}
 Kanzlei: ${data.companyName}
 Webseite: ${data.website}
@@ -500,7 +530,7 @@ Erstelle basierend auf diesen umfassenden Informationen eine professionelle und 
 **BETREFF:** Ihre persönliche KI-Potenzialanalyse von Webnativ
 
 **E-MAIL-STRUKTUR:**
-1. **Persönliche Anrede:** Nutze den Namen und zeige, dass du die spezifische Situation verstanden hast
+1. **Persönliche Anrede:** Nutze die korrekte Anrede (${data.anrede} ${data.userName}) und zeige, dass du die spezifische Situation verstanden hast
 2. **Situationsanalyse:** Fasse die wichtigsten Erkenntnisse aus den Antworten zusammen (Digitalisierungsgrad, Herausforderungen, etc.)
 3. **Konkrete Handlungsempfehlungen:** 
    - Basierend auf dem gewählten Pfad (${data.selectedPath}) und dem spezifischen Problem
