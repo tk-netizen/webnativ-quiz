@@ -4,6 +4,11 @@ let quizData = {
     companyName: '',
     website: '',
     teamSize: '',
+    digitalizationLevel: '',
+    routineTime: '',
+    clientCommunication: '',
+    mainChallenge: '',
+    aiExperience: '',
     selectedPath: '',
     pathDetail: '',
     userEmail: ''
@@ -15,12 +20,17 @@ const screens = [
     'personal-data', 
     'company-info',
     'team-size',
-    'main-question',
-    'workflow-path',     // Index 5
-    'communication-path', // Index 6  
-    'legal-path',        // Index 7
-    'email-screen',
-    'results-screen'
+    'digitalization-level',    // Index 4
+    'routine-time',           // Index 5
+    'client-communication',   // Index 6
+    'main-challenge',         // Index 7
+    'ai-experience',          // Index 8
+    'main-question',          // Index 9
+    'workflow-path',          // Index 10
+    'communication-path',     // Index 11
+    'legal-path',            // Index 12
+    'email-screen',          // Index 13
+    'results-screen'         // Index 14
 ];
 
 // Screen-Navigation
@@ -29,18 +39,18 @@ function nextScreen() {
     current.classList.remove('active');
     
     // Spezielle Logik für Pfad-Auswahl
-    if (currentScreen === 4) { // main-question
+    if (currentScreen === 9) { // main-question
         // Springe zum entsprechenden Pfad basierend auf der Auswahl
         if (quizData.selectedPath === 'workflow') {
-            currentScreen = 5; // workflow-path
+            currentScreen = 10; // workflow-path
         } else if (quizData.selectedPath === 'communication') {
-            currentScreen = 6; // communication-path
+            currentScreen = 11; // communication-path
         } else if (quizData.selectedPath === 'legal') {
-            currentScreen = 7; // legal-path
+            currentScreen = 12; // legal-path
         }
-    } else if (currentScreen >= 5 && currentScreen <= 7) {
+    } else if (currentScreen >= 10 && currentScreen <= 12) {
         // Von den Pfad-Screens direkt zur E-Mail-Eingabe
-        currentScreen = 8; // email-screen
+        currentScreen = 13; // email-screen
     } else {
         currentScreen++;
     }
@@ -58,13 +68,13 @@ function updatePersonalization() {
     const teamSize = quizData.teamSize;
     
     // Hauptfrage personalisieren
-    if (currentScreen === 4 && userName && teamSize) {
+    if (currentScreen === 9 && userName && teamSize) {
         const mainQuestion = document.getElementById('personalizedMainQuestion');
         mainQuestion.textContent = `${userName}, wenn Sie einen Bereich Ihrer Kanzlei mit ${teamSize} Mitarbeitern sofort verbessern könnten, welcher wäre das?`;
     }
     
     // E-Mail-Titel personalisieren
-    if (currentScreen === 8 && userName) {
+    if (currentScreen === 13 && userName) {
         const emailTitle = document.getElementById('personalizedEmailTitle');
         emailTitle.textContent = `Fast geschafft, ${userName}!`;
     }
@@ -114,6 +124,91 @@ function selectTeamSize(size) {
     // Ausgewählten Button markieren
     event.target.classList.add('selected');
     quizData.teamSize = size;
+    
+    // Nach kurzer Verzögerung weiter
+    setTimeout(() => {
+        nextScreen();
+    }, 500);
+}
+
+// Digitalisierungsgrad auswählen
+function selectDigitalizationLevel(level) {
+    // Alle Buttons zurücksetzen
+    document.querySelectorAll('#digitalization-level .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Ausgewählten Button markieren
+    event.target.classList.add('selected');
+    quizData.digitalizationLevel = level;
+    
+    // Nach kurzer Verzögerung weiter
+    setTimeout(() => {
+        nextScreen();
+    }, 500);
+}
+
+// Routine-Zeit auswählen
+function selectRoutineTime(time) {
+    // Alle Buttons zurücksetzen
+    document.querySelectorAll('#routine-time .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Ausgewählten Button markieren
+    event.target.classList.add('selected');
+    quizData.routineTime = time;
+    
+    // Nach kurzer Verzögerung weiter
+    setTimeout(() => {
+        nextScreen();
+    }, 500);
+}
+
+// Mandantenkommunikation auswählen
+function selectClientCommunication(communication) {
+    // Alle Buttons zurücksetzen
+    document.querySelectorAll('#client-communication .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Ausgewählten Button markieren
+    event.target.classList.add('selected');
+    quizData.clientCommunication = communication;
+    
+    // Nach kurzer Verzögerung weiter
+    setTimeout(() => {
+        nextScreen();
+    }, 500);
+}
+
+// Hauptherausforderung auswählen
+function selectMainChallenge(challenge) {
+    // Alle Buttons zurücksetzen
+    document.querySelectorAll('#main-challenge .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Ausgewählten Button markieren
+    event.target.classList.add('selected');
+    quizData.mainChallenge = challenge;
+    
+    // Nach kurzer Verzögerung weiter
+    setTimeout(() => {
+        nextScreen();
+    }, 500);
+}
+
+// KI-Erfahrung auswählen
+function selectAIExperience(experience) {
+    // Alle Buttons zurücksetzen
+    document.querySelectorAll('#ai-experience .option-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Ausgewählten Button markieren
+    event.target.classList.add('selected');
+    quizData.aiExperience = experience;
     
     // Nach kurzer Verzögerung weiter
     setTimeout(() => {
@@ -212,37 +307,56 @@ function makeWebhookCall(data) {
     });
 }
 
-// Beispiel-Funktion für GPT-Prompt-Generierung
+// Erweiterte GPT-Prompt-Generierung mit allen neuen Daten
 function generateGPTPrompt(data) {
-    let prompt = `Du bist ein Experte für Kanzlei-Digitalisierung. Erstelle eine personalisierte KI-Potenzialanalyse für:
+    let prompt = `Du bist ein Experte für Kanzlei-Digitalisierung und agierst als Berater für die Firma Webnativ. Erstelle eine personalisierte KI-Potenzialanalyse für:
 
+**KONTAKTDATEN:**
 Name: ${data.userName}
 Kanzlei: ${data.companyName}
 Webseite: ${data.website}
+E-Mail: ${data.userEmail}
+
+**KANZLEI-PROFIL:**
 Mitarbeiterzahl: ${data.teamSize}
-Hauptfokus: ${data.selectedPath}
-Spezifisches Problem: ${data.pathDetail}
+Aktueller Digitalisierungsgrad: ${data.digitalizationLevel}
+Täglicher Zeitaufwand für Routineaufgaben: ${data.routineTime}
+Mandantenkommunikation: ${data.clientCommunication}
+Hauptherausforderung: ${data.mainChallenge}
+KI-Erfahrung: ${data.aiExperience}
 
-Basierend auf diesen Informationen, erstelle eine professionelle E-Mail mit:
+**ANALYSE-FOKUS:**
+Gewählter Optimierungsbereich: ${data.selectedPath}
+Spezifischer Schmerzpunkt: ${data.pathDetail}
 
-1. Persönlicher Begrüßung
-2. Zusammenfassung der identifizierten Herausforderungen
-3. 2-3 konkrete Handlungsempfehlungen
-4. Verweis auf die passenden Webnativ-Produkte:
-   - Workflow-Agenten (für interne Prozesse)
-   - Voice-Agenten (für Mandantenkommunikation)  
-   - Web-App für Anwälte (für Schriftsätze und Recherche)
-5. Call-to-Action für ein Beratungsgespräch
+**ANWEISUNGEN:**
+Erstelle basierend auf diesen umfassenden Informationen eine professionelle und hochpersonalisierte E-Mail.
 
-Ton: Professionell, beratend, lösungsorientiert
-Länge: 300-400 Wörter`;
+**BETREFF:** Ihre persönliche KI-Potenzialanalyse von Webnativ
+
+**E-MAIL-STRUKTUR:**
+1. **Persönliche Anrede:** Nutze den Namen und zeige, dass du die spezifische Situation verstanden hast
+2. **Situationsanalyse:** Fasse die wichtigsten Erkenntnisse aus den Antworten zusammen (Digitalisierungsgrad, Herausforderungen, etc.)
+3. **Konkrete Handlungsempfehlungen:** 
+   - Basierend auf dem gewählten Pfad (${data.selectedPath}) und dem spezifischen Problem
+   - Berücksichtige den aktuellen Digitalisierungsgrad und die KI-Erfahrung
+   - Leite zu den passenden Webnativ-Produkten über:
+     * Workflow-Agenten (für interne Prozesse und Automatisierung)
+     * Voice-Agenten (für Mandantenkommunikation und Erreichbarkeit)
+     * Web-App für Anwälte (für Schriftsätze, Recherche und Fallbearbeitung)
+4. **Potenzial-Aufzeigung:** Zeige konkrete Verbesserungen auf (Zeitersparnis, Effizienzsteigerung, etc.)
+5. **Call-to-Action:** Lade zu einem kostenlosen Beratungsgespräch ein
+
+**STIL:** Professionell, beratend, lösungsorientiert, nicht zu werblich. Der Mehrwert für den Kunden steht im Vordergrund.
+**LÄNGE:** 400-500 Wörter`;
 
     return prompt;
 }
 
-// Debug-Funktion
+// Erweiterte Debug-Funktion
 function showQuizData() {
-    console.log('Aktuelle Quiz-Daten:', quizData);
+    console.log('Vollständige Quiz-Daten:', quizData);
+    console.log('Aktueller Screen:', currentScreen, '(' + screens[currentScreen] + ')');
 }
 
 // Tastatur-Navigation
@@ -267,3 +381,14 @@ nextScreen = function() {
     originalNextScreen();
     scrollToTop();
 };
+
+// Fortschrittsanzeige aktualisieren
+function updateProgress() {
+    const progressBars = document.querySelectorAll('.progress');
+    const totalScreens = screens.length - 1; // Minus Willkommensseite
+    const currentProgress = Math.round((currentScreen / totalScreens) * 100);
+    
+    progressBars.forEach(bar => {
+        bar.style.width = currentProgress + '%';
+    });
+}

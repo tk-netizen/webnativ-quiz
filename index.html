@@ -12,13 +12,13 @@
         <div id="welcome-screen" class="screen active">
             <div class="header">
                 <h1>Willkommen bei Ihrem persönlichen KI-Reifegrad-Check!</h1>
-                <p class="subtitle">In nur 3 Minuten analysieren wir gemeinsam Ihr digitales Potenzial und geben Ihnen drei konkrete Handlungsempfehlungen für Ihre Kanzlei.</p>
+                <p class="subtitle">In nur 5 Minuten analysieren wir gemeinsam Ihr digitales Potenzial und geben Ihnen konkrete Handlungsempfehlungen für Ihre Kanzlei.</p>
             </div>
             <div class="content">
                 <div class="benefits">
                     <div class="benefit-item">
                         <span class="icon">⚡</span>
-                        <span>Schnelle Analyse in 3 Minuten</span>
+                        <span>Umfassende Analyse in 5 Minuten</span>
                     </div>
                     <div class="benefit-item">
                         <span class="icon">🎯</span>
@@ -36,7 +36,7 @@
         <!-- Phase 1: Persönliche Daten -->
         <div id="personal-data" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 20%"></div>
+                <div class="progress" style="width: 8%"></div>
             </div>
             <div class="question-container">
                 <h2>Wie dürfen wir Sie ansprechen?</h2>
@@ -49,7 +49,7 @@
         <!-- Kanzlei-Informationen -->
         <div id="company-info" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 40%"></div>
+                <div class="progress" style="width: 16%"></div>
             </div>
             <div class="question-container">
                 <h2>Für welche Kanzlei führen Sie die Analyse durch?</h2>
@@ -63,7 +63,7 @@
         <!-- Mitarbeiterzahl -->
         <div id="team-size" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 60%"></div>
+                <div class="progress" style="width: 24%"></div>
             </div>
             <div class="question-container">
                 <h2>Wie viele Mitarbeiter hat Ihre Kanzlei?</h2>
@@ -77,10 +77,143 @@
             </div>
         </div>
 
+        <!-- Neue Frage 1: Digitalisierungsgrad -->
+        <div id="digitalization-level" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 32%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Wie würden Sie den aktuellen Digitalisierungsgrad Ihrer Kanzlei einschätzen?</h2>
+                <p class="explanation">Diese Einschätzung hilft uns, passende Lösungen für Ihren aktuellen Stand zu empfehlen.</p>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectDigitalizationLevel('basic')">
+                        <strong>Grundausstattung</strong><br>
+                        <small>E-Mail, Office-Programme, einfache Kanzleisoftware</small>
+                    </button>
+                    <button class="option-btn" onclick="selectDigitalizationLevel('intermediate')">
+                        <strong>Fortgeschritten</strong><br>
+                        <small>Cloud-Lösungen, digitale Aktenführung, Online-Terminbuchung</small>
+                    </button>
+                    <button class="option-btn" onclick="selectDigitalizationLevel('advanced')">
+                        <strong>Sehr fortgeschritten</strong><br>
+                        <small>Automatisierte Workflows, KI-Tools, umfassende Integration</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neue Frage 2: Zeitaufwand für Routineaufgaben -->
+        <div id="routine-time" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 40%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Wie viel Zeit verbringt Ihr Team täglich mit Routineaufgaben?</h2>
+                <p class="explanation">Denken Sie an Aktenanlage, Terminplanung, Standardkorrespondenz, Fristenüberwachung.</p>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectRoutineTime('low')">
+                        <strong>Weniger als 2 Stunden täglich</strong><br>
+                        <small>Routineaufgaben sind bereits gut optimiert</small>
+                    </button>
+                    <button class="option-btn" onclick="selectRoutineTime('medium')">
+                        <strong>2-4 Stunden täglich</strong><br>
+                        <small>Spürbarer Aufwand, aber noch im Rahmen</small>
+                    </button>
+                    <button class="option-btn" onclick="selectRoutineTime('high')">
+                        <strong>Mehr als 4 Stunden täglich</strong><br>
+                        <small>Routineaufgaben binden erhebliche Kapazitäten</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neue Frage 3: Mandantenkommunikation -->
+        <div id="client-communication" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 48%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Wie läuft die Kommunikation mit Ihren Mandanten hauptsächlich ab?</h2>
+                <p class="explanation">Diese Information hilft uns, Ihre Kommunikationsprozesse zu verstehen.</p>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectClientCommunication('traditional')">
+                        <strong>Überwiegend traditionell</strong><br>
+                        <small>Telefon, persönliche Termine, Brief/Fax</small>
+                    </button>
+                    <button class="option-btn" onclick="selectClientCommunication('mixed')">
+                        <strong>Gemischt digital und traditionell</strong><br>
+                        <small>E-Mail, Telefon, gelegentlich Online-Tools</small>
+                    </button>
+                    <button class="option-btn" onclick="selectClientCommunication('digital')">
+                        <strong>Überwiegend digital</strong><br>
+                        <small>E-Mail, Mandantenportale, Online-Terminbuchung</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neue Frage 4: Größte Herausforderung -->
+        <div id="main-challenge" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 56%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Was ist aktuell Ihre größte betriebliche Herausforderung?</h2>
+                <p class="explanation">Wählen Sie den Bereich aus, der Ihnen die meisten Kopfschmerzen bereitet.</p>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectMainChallenge('capacity')">
+                        <strong>Kapazitätsengpässe</strong><br>
+                        <small>Zu viel Arbeit, zu wenig Zeit, Überstunden</small>
+                    </button>
+                    <button class="option-btn" onclick="selectMainChallenge('efficiency')">
+                        <strong>Ineffiziente Prozesse</strong><br>
+                        <small>Doppelarbeit, manuelle Tätigkeiten, Medienbrüche</small>
+                    </button>
+                    <button class="option-btn" onclick="selectMainChallenge('quality')">
+                        <strong>Qualitätssicherung</strong><br>
+                        <small>Fehlerrisiko, Konsistenz, Nachverfolgbarkeit</small>
+                    </button>
+                    <button class="option-btn" onclick="selectMainChallenge('growth')">
+                        <strong>Wachstum und Skalierung</strong><br>
+                        <small>Neue Mandanten gewinnen, Prozesse skalieren</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Neue Frage 5: KI-Erfahrung -->
+        <div id="ai-experience" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 64%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Welche Erfahrungen haben Sie bereits mit KI-Tools gemacht?</h2>
+                <p class="explanation">Ihre bisherigen Erfahrungen helfen uns, die richtige Einstiegsstrategie zu empfehlen.</p>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectAIExperience('none')">
+                        <strong>Noch keine Erfahrungen</strong><br>
+                        <small>KI ist für uns noch Neuland</small>
+                    </button>
+                    <button class="option-btn" onclick="selectAIExperience('basic')">
+                        <strong>Erste Versuche</strong><br>
+                        <small>ChatGPT ausprobiert, aber nicht systematisch genutzt</small>
+                    </button>
+                    <button class="option-btn" onclick="selectAIExperience('regular')">
+                        <strong>Regelmäßige Nutzung</strong><br>
+                        <small>Nutzen bereits KI-Tools für bestimmte Aufgaben</small>
+                    </button>
+                    <button class="option-btn" onclick="selectAIExperience('advanced')">
+                        <strong>Fortgeschrittene Nutzung</strong><br>
+                        <small>KI ist bereits fester Bestandteil unserer Arbeitsweise</small>
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Hauptfrage: Pfad-Auswahl -->
         <div id="main-question" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 70%"></div>
+                <div class="progress" style="width: 72%"></div>
             </div>
             <div class="question-container">
                 <h2 id="personalizedMainQuestion">Wenn Sie einen Bereich Ihrer Kanzlei sofort verbessern könnten, welcher wäre das?</h2>
@@ -119,7 +252,7 @@
         <!-- Workflow-Pfad -->
         <div id="workflow-path" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 85%"></div>
+                <div class="progress" style="width: 80%"></div>
             </div>
             <div class="question-container">
                 <h2>Welche dieser Aufgaben frisst aktuell die meiste Zeit?</h2>
@@ -127,6 +260,7 @@
                     <button class="option-btn" onclick="selectWorkflowDetail('mandanten')">Die Anlage neuer Mandanten und Akten in unseren Systemen</button>
                     <button class="option-btn" onclick="selectWorkflowDetail('fristen')">Die Überwachung von Fristen und Wiedervorlagen</button>
                     <button class="option-btn" onclick="selectWorkflowDetail('termine')">Die Planung und Koordination von Terminen</button>
+                    <button class="option-btn" onclick="selectWorkflowDetail('dokumente')">Die Erstellung und Verwaltung von Standarddokumenten</button>
                 </div>
             </div>
         </div>
@@ -134,7 +268,7 @@
         <!-- Kommunikations-Pfad -->
         <div id="communication-path" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 85%"></div>
+                <div class="progress" style="width: 80%"></div>
             </div>
             <div class="question-container">
                 <h2>Was ist dabei die größte Herausforderung für Ihr Team?</h2>
@@ -142,6 +276,7 @@
                     <button class="option-btn" onclick="selectCommunicationDetail('unterbrechungen')">Wir werden oft durch Anrufe mit Standardfragen aus der konzentrierten Arbeit gerissen</button>
                     <button class="option-btn" onclick="selectCommunicationDetail('erreichbarkeit')">Mandanten beschweren sich über mangelnde Erreichbarkeit außerhalb der Geschäftszeiten</button>
                     <button class="option-btn" onclick="selectCommunicationDetail('termine')">Die telefonische Terminvereinbarung ist ein ständiges Hin und Her</button>
+                    <button class="option-btn" onclick="selectCommunicationDetail('information')">Mandanten fragen immer wieder nach dem gleichen Sachstand</button>
                 </div>
             </div>
         </div>
@@ -149,7 +284,7 @@
         <!-- Rechtlicher Pfad -->
         <div id="legal-path" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 85%"></div>
+                <div class="progress" style="width: 80%"></div>
             </div>
             <div class="question-container">
                 <h2>Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?</h2>
@@ -157,6 +292,7 @@
                     <button class="option-btn" onclick="selectLegalDetail('recherche')">Bei der Recherche nach ähnlichen, bereits bearbeiteten Fällen in unserer eigenen Datenbank</button>
                     <button class="option-btn" onclick="selectLegalDetail('rechtsprechung')">Bei der Suche nach aktueller, externer Rechtsprechung zu einem Fall</button>
                     <button class="option-btn" onclick="selectLegalDetail('formulierung')">Beim Formulieren des Antwortschreibens im einheitlichen Kanzleistil</button>
+                    <button class="option-btn" onclick="selectLegalDetail('analyse')">Bei der Analyse und Bewertung komplexer Rechtsfragen</button>
                 </div>
             </div>
         </div>
@@ -164,7 +300,7 @@
         <!-- E-Mail Eingabe -->
         <div id="email-screen" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 95%"></div>
+                <div class="progress" style="width: 90%"></div>
             </div>
             <div class="question-container">
                 <h2 id="personalizedEmailTitle">Fast geschafft!</h2>
