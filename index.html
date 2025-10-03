@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KI-Reifegrad-Check für Kanzleien | Webnativ</title>
+    <title>KI-Reifegrad-Check für Kanzleien - Webnativ</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container">
+        <!-- Debug-Info -->
+        <div id="debug-info" style="position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; z-index: 1000;">
+            Screen: <span id="debug-screen">0</span><br>
+            ID: <span id="debug-id">welcome-screen</span>
+        </div>
         <!-- Willkommensseite -->
         <div id="welcome-screen" class="screen active">
             <div class="header">
@@ -33,7 +38,7 @@
                 <div style="background: #f8f9ff; border-radius: 15px; padding: 20px; margin: 30px 0; text-align: center;">
                     <p style="margin: 0; color: #333; font-size: 1.1em;"><strong>Kostenlos & unverbindlich</strong> – Ihre persönliche Analyse erhalten Sie direkt per E-Mail</p>
                 </div>
-                <button class="btn-primary" onclick="nextScreen()">Jetzt KI-Potenzial entdecken</button>
+                <button class="btn-primary" onclick="startQuiz()" id="start-button">Jetzt KI-Potenzial entdecken</button>
             </div>
         </div>
 

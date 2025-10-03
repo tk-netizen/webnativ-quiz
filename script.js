@@ -1,3 +1,40 @@
+// Debug-Funktionen
+function updateDebugInfo() {
+    const debugScreen = document.getElementById('debug-screen');
+    const debugId = document.getElementById('debug-id');
+    if (debugScreen) debugScreen.textContent = currentScreen;
+    if (debugId) debugId.textContent = screens[currentScreen] || 'undefined';
+}
+
+// Einfache Start-Funktion
+function startQuiz() {
+    console.log('startQuiz() aufgerufen');
+    
+    // Willkommensseite verstecken
+    const welcomeScreen = document.getElementById('welcome-screen');
+    if (welcomeScreen) {
+        welcomeScreen.classList.remove('active');
+        console.log('Willkommensseite versteckt');
+    }
+    
+    // Zur Namenseingabe wechseln
+    currentScreen = 1;
+    const nameScreen = document.getElementById('personal-data');
+    if (nameScreen) {
+        nameScreen.classList.add('active');
+        console.log('Namenseingabe angezeigt');
+        
+        // Event Listeners für Namenseingabe einrichten
+        setTimeout(() => {
+            setupNameEventListeners();
+        }, 100);
+    } else {
+        console.error('Namenseingabe-Screen nicht gefunden');
+    }
+    
+    updateDebugInfo();
+}
+
 // Quiz-Daten und Zustand
 let quizData = {
     anrede: '',              // Herr, Frau, Divers
@@ -89,6 +126,9 @@ function nextScreen() {
     
     // Personalisierung aktualisieren
     updatePersonalization();
+    
+    // Debug-Info aktualisieren
+    updateDebugInfo();
 }
 
 // Personalisierung der Inhalte
@@ -285,8 +325,13 @@ function validateNameForm() {
 
 // Event Listeners für Eingabefelder
 document.addEventListener('DOMContentLoaded', function() {
+    // Debug-Info initialisieren
+    updateDebugInfo();
+    
     // Name-Eingabe Event Listeners hinzufügen
     setupNameEventListeners();
+    
+    console.log('Quiz geladen, Screens verfügbar:', screens);
 });
 
 function setupNameEventListeners() {
