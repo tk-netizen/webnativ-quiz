@@ -279,10 +279,18 @@ function selectAnrede(anrede) {
     // Alle Anrede-Buttons zurücksetzen
     document.querySelectorAll('.anrede-btn').forEach(btn => {
         btn.classList.remove('selected');
+        btn.style.background = '';
+        btn.style.color = '';
+        btn.style.borderColor = '';
     });
     
     // Ausgewählten Button markieren
-    event.target.classList.add('selected');
+    const selectedBtn = event.target;
+    selectedBtn.classList.add('selected');
+    selectedBtn.style.background = 'linear-gradient(90deg, #667eea, #764ba2)';
+    selectedBtn.style.color = 'white';
+    selectedBtn.style.borderColor = '#667eea';
+    
     quizData.anrede = anrede;
     
     // Formular-Validierung aktualisieren
@@ -290,6 +298,8 @@ function selectAnrede(anrede) {
     const nameNext = document.getElementById('nameNext');
     const hasName = nameInput.value.trim().length >= 2;
     nameNext.disabled = !(anrede && hasName);
+    
+    console.log('Anrede ausgewählt:', anrede); // Debug-Log
 }
 
 // Kanzlei-Art auswählen

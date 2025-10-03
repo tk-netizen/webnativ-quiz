@@ -429,6 +429,13 @@ body {
     transition: all 0.3s ease;
     min-width: 80px;
     font-weight: 500;
+    position: relative;
+    outline: none;
+}
+
+.anrede-btn:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 .anrede-btn:hover {
@@ -437,9 +444,17 @@ body {
 }
 
 .anrede-btn.selected {
-    border-color: #667eea;
-    background: linear-gradient(90deg, #667eea, #764ba2);
-    color: white;
+    border-color: #667eea !important;
+    background: linear-gradient(90deg, #667eea, #764ba2) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    transform: translateY(-1px);
+}
+
+.anrede-btn.selected:hover {
+    background: linear-gradient(90deg, #667eea, #764ba2) !important;
+    color: white !important;
+    transform: translateY(-1px);
 }
 
 @media (max-width: 480px) {
