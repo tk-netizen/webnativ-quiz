@@ -1,10 +1,12 @@
 // Quiz-Daten und Zustand
 let quizData = {
-    anrede: '',              // Neu: Herr, Frau, Divers
-    userName: '',
+    anrede: '',              // Herr, Frau, Divers
+    firstName: '',           // Vorname
+    lastName: '',            // Nachname
+    userName: '',            // Vollständiger Name (wird automatisch generiert)
     companyName: '',
     website: '',
-    practiceType: '',        // Neu: Steuerberater, Rechtsanwalt oder gemischt
+    practiceType: '',        // Steuerberater, Rechtsanwalt oder gemischt
     teamSize: '',
     digitalizationLevel: '',
     routineTime: '',
@@ -80,16 +82,20 @@ function updatePersonalization() {
     if (currentScreen === 10 && userName && teamSize) {
         const mainQuestion = document.getElementById('personalizedMainQuestion');
         const anrede = quizData.anrede;
-        const fullName = anrede ? `${anrede} ${userName}` : userName;
-        mainQuestion.textContent = `${fullName}, wenn Sie einen Bereich Ihrer Kanzlei mit ${teamSize} Mitarbeitern sofort verbessern könnten, welcher wäre das?`;
+        const lastName = quizData.lastName;
+        // Verwende Anrede + Nachname für professionelle Ansprache
+        const formalName = anrede && lastName ? `${anrede} ${lastName}` : userName;
+        mainQuestion.textContent = `${formalName}, wenn Sie einen Bereich Ihrer Kanzlei mit ${teamSize} Mitarbeitern sofort verbessern könnten, welcher wäre das?`;
     }
     
     // E-Mail-Titel personalisieren
     if (currentScreen === 14 && userName) {
         const emailTitle = document.getElementById('personalizedEmailTitle');
         const anrede = quizData.anrede;
-        const fullName = anrede ? `${anrede} ${userName}` : userName;
-        emailTitle.textContent = `Fast geschafft, ${fullName}!`;
+        const lastName = quizData.lastName;
+        // Verwende Anrede + Nachname für professionelle Ansprache
+        const formalName = anrede && lastName ? `${anrede} ${lastName}` : userName;
+        emailTitle.textContent = `Fast geschafft, ${formalName}!`;
     }
 }
 
@@ -237,17 +243,29 @@ function updateLegalOptions(practiceType) {
 // Event Listeners für Eingabefelder
 document.addEventListener('DOMContentLoaded', function() {
     // Name-Eingabe
-    const nameInput = document.getElementById('userName');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
     const nameNext = document.getElementById('nameNext');
     
     function validateNameForm() {
         const hasAnrede = quizData.anrede.length > 0;
-        const hasName = quizData.userName.length >= 2;
-        nameNext.disabled = !(hasAnrede && hasName);
+        const hasFirstName = quizData.firstName.length >= 2;
+        const hasLastName = quizData.lastName.length >= 2;
+        nameNext.disabled = !(hasAnrede && hasFirstName && hasLastName);
+        
+        // Vollständigen Namen generieren
+        if (hasFirstName && hasLastName) {
+            quizData.userName = `${quizData.firstName} ${quizData.lastName}`;
+        }
     }
     
-    nameInput.addEventListener('input', function() {
-        quizData.userName = this.value.trim();
+    firstNameInput.addEventListener('input', function() {
+        quizData.firstName = this.value.trim();
+        validateNameForm();
+    });
+    
+    lastNameInput.addEventListener('input', function() {
+        quizData.lastName = this.value.trim();
         validateNameForm();
     });
     
@@ -294,10 +312,12 @@ function selectAnrede(anrede) {
     quizData.anrede = anrede;
     
     // Formular-Validierung aktualisieren
-    const nameInput = document.getElementById('userName');
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
     const nameNext = document.getElementById('nameNext');
-    const hasName = nameInput.value.trim().length >= 2;
-    nameNext.disabled = !(anrede && hasName);
+    const hasFirstName = firstNameInput.value.trim().length >= 2;
+    const hasLastName = lastNameInput.value.trim().length >= 2;
+    nameNext.disabled = !(anrede && hasFirstName && hasLastName);
     
     console.log('Anrede ausgewählt:', anrede); // Debug-Log
 }
@@ -516,7 +536,9 @@ function generateGPTPrompt(data) {
 
 **KONTAKTDATEN:**
 Anrede: ${data.anrede}
-Name: ${data.userName}
+Vorname: ${data.firstName}
+Nachname: ${data.lastName}
+Vollständiger Name: ${data.userName}
 Kanzlei: ${data.companyName}
 Webseite: ${data.website}
 E-Mail: ${data.userEmail}
@@ -540,7 +562,7 @@ Erstelle basierend auf diesen umfassenden Informationen eine professionelle und 
 **BETREFF:** Ihre persönliche KI-Potenzialanalyse von Webnativ
 
 **E-MAIL-STRUKTUR:**
-1. **Persönliche Anrede:** Nutze die korrekte Anrede (${data.anrede} ${data.userName}) und zeige, dass du die spezifische Situation verstanden hast
+1. **Persönliche Anrede:** Nutze die korrekte Anrede (${data.anrede} ${data.lastName}) für professionelle Ansprache und zeige, dass du die spezifische Situation verstanden hast
 2. **Situationsanalyse:** Fasse die wichtigsten Erkenntnisse aus den Antworten zusammen (Digitalisierungsgrad, Herausforderungen, etc.)
 3. **Konkrete Handlungsempfehlungen:** 
    - Basierend auf dem gewählten Pfad (${data.selectedPath}) und dem spezifischen Problem
