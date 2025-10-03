@@ -4,417 +4,812 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>KI-Reifegrad-Check für Kanzleien - Webnativ</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 90%;
+            max-width: 600px;
+            min-height: 500px;
+            overflow: hidden;
+        }
+
+        .screen {
+            display: none;
+            padding: 40px;
+            text-align: center;
+            min-height: 500px;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: #f0f0f0;
+            border-radius: 3px;
+            margin-bottom: 30px;
+        }
+
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 3px;
+            transition: width 0.5s ease;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            line-height: 1.2;
+        }
+
+        h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+            line-height: 1.5;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+            min-width: 150px;
+            margin: 10px;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+        }
+
+        .btn-primary:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            margin-bottom: 20px;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .option-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 15px 20px;
+            border-radius: 10px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 10px;
+            min-width: 200px;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+
+        .option-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .option-btn.selected {
+            border-color: #667eea;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .anrede-options {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .anrede-btn {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .anrede-btn:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .anrede-btn.selected {
+            border-color: #667eea;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .benefits {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .benefit-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
+            background: #f8f9ff;
+            border-radius: 15px;
+            border: 2px solid #e8ecff;
+        }
+
+        .benefit-item .icon {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+
+        .debug {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 12px;
+            z-index: 1000;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                width: 95%;
+                margin: 10px;
+            }
+            
+            .screen {
+                padding: 30px 20px;
+            }
+            
+            h1 {
+                font-size: 1.8em;
+            }
+
+            h2 {
+                font-size: 1.5em;
+            }
+            
+            .benefits {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
 </head>
 <body>
+    <div class="debug" id="debug">
+        Screen: <span id="current-screen">1</span><br>
+        Type: <span id="company-type">-</span><br>
+        Progress: <span id="progress">0%</span>
+    </div>
+
     <div class="container">
-        <!-- Debug-Info -->
-        <div id="debug-info" style="position: fixed; top: 10px; right: 10px; background: rgba(0,0,0,0.8); color: white; padding: 10px; border-radius: 5px; font-family: monospace; font-size: 12px; z-index: 1000;">
-            Screen: <span id="debug-screen">0</span><br>
-            ID: <span id="debug-id">welcome-screen</span>
-        </div>
-        <!-- Willkommensseite -->
-        <div id="welcome-screen" class="screen active">
-            <div class="header">
-                <h1>Liebe Steuerberater und Rechtsanwälte,</h1>
-                <h2 style="color: #667eea; font-size: 1.8em; margin-bottom: 20px;">willkommen bei Ihrem persönlichen KI-Reifegrad-Check!</h2>
-                <p class="subtitle">Entdecken Sie in nur 5 Minuten, wie Künstliche Intelligenz Ihre Kanzlei revolutionieren kann. Wir analysieren gemeinsam Ihr digitales Potenzial und geben Ihnen maßgeschneiderte Handlungsempfehlungen für mehr Effizienz, weniger Routinearbeit und zufriedenere Mandanten.</p>
-            </div>
-            <div class="content">
-                <div class="benefits">
-                    <div class="benefit-item">
-                        <span class="icon">⚡</span>
-                        <span><strong>Schnelle Analyse</strong><br>Nur 5 Minuten für umfassende Erkenntnisse</span>
-                    </div>
-                    <div class="benefit-item">
-                        <span class="icon">🎯</span>
-                        <span><strong>Branchenspezifisch</strong><br>Speziell für Steuer- und Rechtsberatung</span>
-                    </div>
-                    <div class="benefit-item">
-                        <span class="icon">🚀</span>
-                        <span><strong>Sofort umsetzbar</strong><br>Konkrete Schritte für Ihre Kanzlei</span>
-                    </div>
+        <!-- Screen 1: Willkommen -->
+        <div id="screen-1" class="screen active">
+            <h1>Liebe Steuerberater und Rechtsanwälte,</h1>
+            <h2 style="color: #667eea;">willkommen bei Ihrem persönlichen KI-Reifegrad-Check!</h2>
+            <p class="subtitle">Entdecken Sie in nur 5 Minuten, wie Künstliche Intelligenz Ihre Kanzlei revolutionieren kann.</p>
+            
+            <div class="benefits">
+                <div class="benefit-item">
+                    <span class="icon">⚡</span>
+                    <span><strong>Schnelle Analyse</strong><br>Nur 5 Minuten für umfassende Erkenntnisse</span>
                 </div>
-                <div style="background: #f8f9ff; border-radius: 15px; padding: 20px; margin: 30px 0; text-align: center;">
-                    <p style="margin: 0; color: #333; font-size: 1.1em;"><strong>Kostenlos & unverbindlich</strong> – Ihre persönliche Analyse erhalten Sie direkt per E-Mail</p>
+                <div class="benefit-item">
+                    <span class="icon">🎯</span>
+                    <span><strong>Branchenspezifisch</strong><br>Speziell für Steuer- und Rechtsberatung</span>
                 </div>
-                <button class="btn-primary" onclick="startQuiz()" id="start-button">Jetzt KI-Potenzial entdecken</button>
+                <div class="benefit-item">
+                    <span class="icon">🚀</span>
+                    <span><strong>Sofort umsetzbar</strong><br>Konkrete Schritte für Ihre Kanzlei</span>
+                </div>
             </div>
+            
+            <div style="background: #f8f9ff; border-radius: 15px; padding: 20px; margin: 30px 0;">
+                <p style="margin: 0; color: #333; font-size: 1.1em;"><strong>Kostenlos & unverbindlich</strong> – Ihre persönliche Analyse erhalten Sie direkt per E-Mail</p>
+            </div>
+            
+            <button class="btn-primary" onclick="goToScreen(2)">Jetzt KI-Potenzial entdecken</button>
         </div>
 
-        <!-- Phase 1: Persönliche Daten -->
-        <div id="personal-data" class="screen">
+        <!-- Screen 2: Namenseingabe -->
+        <div id="screen-2" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 8%"></div>
+                <div class="progress" style="width: 12%"></div>
             </div>
-            <div class="question-container">
-                <h2>Wie dürfen wir Sie ansprechen?</h2>
-                <p class="explanation">Wir verwenden diese Informationen, um die Analyse persönlich für Sie zu gestalten.</p>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Anrede</label>
-                    <div class="anrede-options">
-                        <button type="button" class="anrede-btn" onclick="selectAnrede('Herr')">Herr</button>
-                        <button type="button" class="anrede-btn" onclick="selectAnrede('Frau')">Frau</button>
-                        <button type="button" class="anrede-btn" onclick="selectAnrede('Divers')">Divers</button>
-                    </div>
+            
+            <div class="question-number">Frage 1 von 8</div>
+            <h2>Wie dürfen wir Sie ansprechen?</h2>
+            <p class="subtitle">Wir verwenden diese Informationen, um die Analyse persönlich für Sie zu gestalten.</p>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Anrede</label>
+                <div class="anrede-options">
+                    <button type="button" class="anrede-btn" onclick="selectAnrede('Herr', this)">Herr</button>
+                    <button type="button" class="anrede-btn" onclick="selectAnrede('Frau', this)">Frau</button>
+                    <button type="button" class="anrede-btn" onclick="selectAnrede('Divers', this)">Divers</button>
                 </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Vorname</label>
-                    <input type="text" id="firstName" placeholder="z.B. Maria" class="input-field" oninput="updateFirstName(this.value)">
-                </div>
-                
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Nachname</label>
-                    <input type="text" id="lastName" placeholder="z.B. Dr. Schneider" class="input-field" oninput="updateLastName(this.value)">
-                </div>
-                
-                <button class="btn-primary" onclick="nextScreen()" disabled id="nameNext">Weiter</button>
             </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Vorname</label>
+                <input type="text" id="firstName" placeholder="z.B. Maria" class="input-field" onkeyup="checkNameForm()">
+            </div>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Nachname</label>
+                <input type="text" id="lastName" placeholder="z.B. Dr. Schneider" class="input-field" onkeyup="checkNameForm()">
+            </div>
+            
+            <button class="btn-primary" onclick="goToScreen(3)" disabled id="name-next-btn">Weiter</button>
         </div>
 
-        <!-- Kanzlei-Informationen -->
-        <div id="company-info" class="screen">
+        <!-- Screen 3: Kanzlei-Typ -->
+        <div id="screen-3" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 16%"></div>
+                <div class="progress" style="width: 25%"></div>
             </div>
-            <div class="question-container">
-                <h2>Für welche Kanzlei führen Sie die Analyse durch?</h2>
-                <p class="explanation">Die Angabe Ihrer Webseite hilft uns, unsere Vorschläge besser auf Ihre Kanzlei zuzuschneiden.</p>
-                <input type="text" id="companyName" placeholder="Name der Kanzlei" class="input-field">
-                <input type="url" id="website" placeholder="Webseite (optional)" class="input-field">
-                <button class="btn-primary" onclick="nextScreen()">Weiter</button>
-            </div>
+            
+            <div class="question-number">Frage 2 von 8</div>
+            <h2>In welchem Bereich ist Ihre Kanzlei hauptsächlich tätig?</h2>
+            <p class="subtitle">Diese Information hilft uns, die folgenden Fragen optimal auf Ihre Branche anzupassen.</p>
+            
+            <button class="option-btn" onclick="selectCompanyType('tax', this)">
+                <strong>📊 Steuerberatung</strong><br>
+                <small>Steuerberatung, Buchhaltung, Jahresabschlüsse, Lohnabrechnung</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectCompanyType('law', this)">
+                <strong>⚖️ Rechtsberatung</strong><br>
+                <small>Rechtsberatung, Prozessführung, Vertragsrecht, Familienrecht</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectCompanyType('mixed', this)">
+                <strong>🏢 Gemischte Kanzlei</strong><br>
+                <small>Sowohl Steuerberatung als auch Rechtsberatung</small>
+            </button>
+            
+            <button class="btn-primary" onclick="goToScreen(4)" disabled id="type-next-btn">Weiter</button>
         </div>
 
-        <!-- Neue Frage: Kanzlei-Art -->
-        <div id="practice-type" class="screen">
+        <!-- Screen 4: Mitarbeiterzahl -->
+        <div id="screen-4" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 20%"></div>
+                <div class="progress" style="width: 37%"></div>
             </div>
-            <div class="question-container">
-                <h2>In welchem Bereich ist Ihre Kanzlei hauptsächlich tätig?</h2>
-                <p class="explanation">Diese Information hilft uns, branchenspezifische Empfehlungen zu geben.</p>
-                <div class="options-vertical">
-                    <button class="option-btn-large" onclick="selectPracticeType('tax')">
-                        <div class="option-content">
-                            <span class="option-icon">📊</span>
-                            <div class="option-text">
-                                <strong>Steuerberatung</strong>
-                                <p>Steuerberatung, Buchhaltung, Jahresabschlüsse, Lohnabrechnung</p>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="option-btn-large" onclick="selectPracticeType('law')">
-                        <div class="option-content">
-                            <span class="option-icon">⚖️</span>
-                            <div class="option-text">
-                                <strong>Rechtsberatung</strong>
-                                <p>Rechtsberatung, Prozessführung, Vertragsrecht, Familienrecht</p>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="option-btn-large" onclick="selectPracticeType('mixed')">
-                        <div class="option-content">
-                            <span class="option-icon">🏢</span>
-                            <div class="option-text">
-                                <strong>Gemischte Kanzlei</strong>
-                                <p>Sowohl Steuerberatung als auch Rechtsberatung</p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
-            </div>
+            
+            <div class="question-number">Frage 3 von 8</div>
+            <h2>Wie viele Mitarbeiter hat Ihre Kanzlei?</h2>
+            <p class="subtitle">Dies hilft uns, passende Lösungen für Ihre Kanzleigröße zu empfehlen.</p>
+            
+            <button class="option-btn" onclick="selectTeamSize('1-2', this)">
+                <strong>1-2 Mitarbeiter</strong><br>
+                <small>Einzelkanzlei oder sehr kleine Praxis</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectTeamSize('3-5', this)">
+                <strong>3-5 Mitarbeiter</strong><br>
+                <small>Kleine Kanzlei mit wenigen Angestellten</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectTeamSize('6-15', this)">
+                <strong>6-15 Mitarbeiter</strong><br>
+                <small>Mittelgroße Kanzlei</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectTeamSize('16+', this)">
+                <strong>16+ Mitarbeiter</strong><br>
+                <small>Große Kanzlei oder Sozietät</small>
+            </button>
+            
+            <button class="btn-primary" onclick="goToScreen(5)" disabled id="team-next-btn">Weiter</button>
         </div>
 
-        <!-- Mitarbeiterzahl -->
-        <div id="team-size" class="screen">
-            <div class="progress-bar">
-                <div class="progress" style="width: 26%"></div>
-            </div>
-            <div class="question-container">
-                <h2>Wie viele Mitarbeiter hat Ihre Kanzlei?</h2>
-                <p class="explanation">Die Größe Ihrer Kanzlei beeinflusst, welche digitalen Lösungen den größten Hebel haben.</p>
-                <div class="options-grid">
-                    <button class="option-btn" onclick="selectTeamSize('1-5')">1-5 Mitarbeiter</button>
-                    <button class="option-btn" onclick="selectTeamSize('6-15')">6-15 Mitarbeiter</button>
-                    <button class="option-btn" onclick="selectTeamSize('16-50')">16-50 Mitarbeiter</button>
-                    <button class="option-btn" onclick="selectTeamSize('50+')">Mehr als 50 Mitarbeiter</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Neue Frage 1: Digitalisierungsgrad -->
-        <div id="digitalization-level" class="screen">
-            <div class="progress-bar">
-                <div class="progress" style="width: 34%"></div>
-            </div>
-            <div class="question-container">
-                <h2>Wie würden Sie den aktuellen Digitalisierungsgrad Ihrer Kanzlei einschätzen?</h2>
-                <p class="explanation">Diese Einschätzung hilft uns, passende Lösungen für Ihren aktuellen Stand zu empfehlen.</p>
-                <div class="options-vertical">
-                    <button class="option-btn" onclick="selectDigitalizationLevel('basic')">
-                        <strong>Grundausstattung</strong><br>
-                        <small>E-Mail, Office-Programme, einfache Kanzleisoftware</small>
-                    </button>
-                    <button class="option-btn" onclick="selectDigitalizationLevel('intermediate')">
-                        <strong>Fortgeschritten</strong><br>
-                        <small>Cloud-Lösungen, digitale Aktenführung, Online-Terminbuchung</small>
-                    </button>
-                    <button class="option-btn" onclick="selectDigitalizationLevel('advanced')">
-                        <strong>Sehr fortgeschritten</strong><br>
-                        <small>Automatisierte Workflows, KI-Tools, umfassende Integration</small>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Neue Frage 2: Zeitaufwand für Routineaufgaben -->
-        <div id="routine-time" class="screen">
-            <div class="progress-bar">
-                <div class="progress" style="width: 42%"></div>
-            </div>
-            <div class="question-container">
-                <h2 id="routineTimeQuestion">Wie viel Zeit verbringt Ihr Team täglich mit Routineaufgaben?</h2>
-                <p class="explanation" id="routineTimeExplanation">Denken Sie an Aktenanlage, Terminplanung, Standardkorrespondenz, Fristenüberwachung.</p>
-                <div class="options-vertical">
-                    <button class="option-btn" onclick="selectRoutineTime('low')">
-                        <strong>Weniger als 2 Stunden täglich</strong><br>
-                        <small>Routineaufgaben sind bereits gut optimiert</small>
-                    </button>
-                    <button class="option-btn" onclick="selectRoutineTime('medium')">
-                        <strong>2-4 Stunden täglich</strong><br>
-                        <small>Spürbarer Aufwand, aber noch im Rahmen</small>
-                    </button>
-                    <button class="option-btn" onclick="selectRoutineTime('high')">
-                        <strong>Mehr als 4 Stunden täglich</strong><br>
-                        <small>Routineaufgaben binden erhebliche Kapazitäten</small>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Neue Frage 3: Mandantenkommunikation -->
-        <div id="client-communication" class="screen">
+        <!-- Screen 5: Dynamische Frage 1 -->
+        <div id="screen-5" class="screen">
             <div class="progress-bar">
                 <div class="progress" style="width: 50%"></div>
             </div>
-            <div class="question-container">
-                <h2 id="clientCommQuestion">Wie läuft die Kommunikation mit Ihren Mandanten hauptsächlich ab?</h2>
-                <p class="explanation" id="clientCommExplanation">Diese Information hilft uns, Ihre Kommunikationsprozesse zu verstehen.</p>
-                <div class="options-vertical">
-                    <button class="option-btn" onclick="selectClientCommunication('traditional')">
-                        <strong>Überwiegend traditionell</strong><br>
-                        <small>Telefon, persönliche Termine, Brief/Fax</small>
-                    </button>
-                    <button class="option-btn" onclick="selectClientCommunication('mixed')">
-                        <strong>Gemischt digital und traditionell</strong><br>
-                        <small>E-Mail, Telefon, gelegentlich Online-Tools</small>
-                    </button>
-                    <button class="option-btn" onclick="selectClientCommunication('digital')">
-                        <strong>Überwiegend digital</strong><br>
-                        <small>E-Mail, Mandantenportale, Online-Terminbuchung</small>
-                    </button>
-                </div>
+            
+            <div class="question-number">Frage 4 von 8</div>
+            <h2 id="q1-title">Wie viel Zeit verbringen Sie täglich mit Routineaufgaben?</h2>
+            <p class="subtitle" id="q1-subtitle">Routineaufgaben sind sich wiederholende Tätigkeiten, die automatisiert werden könnten.</p>
+            
+            <div id="q1-options">
+                <!-- Wird dynamisch gefüllt -->
             </div>
+            
+            <button class="btn-primary" onclick="goToScreen(6)" disabled id="q1-next-btn">Weiter</button>
         </div>
 
-        <!-- Neue Frage 4: Größte Herausforderung -->
-        <div id="main-challenge" class="screen">
+        <!-- Screen 6: Dynamische Frage 2 -->
+        <div id="screen-6" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 58%"></div>
+                <div class="progress" style="width: 62%"></div>
             </div>
-            <div class="question-container">
-                <h2 id="mainChallengeQuestion">Was ist aktuell Ihre größte betriebliche Herausforderung?</h2>
-                <p class="explanation" id="mainChallengeExplanation">Wählen Sie den Bereich aus, der Ihnen die meisten Kopfschmerzen bereitet.</p>
-                <div class="options-vertical">
-                    <button class="option-btn" onclick="selectMainChallenge('capacity')">
-                        <strong>Kapazitätsengpässe</strong><br>
-                        <small>Zu viel Arbeit, zu wenig Zeit, Überstunden</small>
-                    </button>
-                    <button class="option-btn" onclick="selectMainChallenge('efficiency')">
-                        <strong>Ineffiziente Prozesse</strong><br>
-                        <small>Doppelarbeit, manuelle Tätigkeiten, Medienbrüche</small>
-                    </button>
-                    <button class="option-btn" onclick="selectMainChallenge('quality')">
-                        <strong>Qualitätssicherung</strong><br>
-                        <small>Fehlerrisiko, Konsistenz, Nachverfolgbarkeit</small>
-                    </button>
-                    <button class="option-btn" onclick="selectMainChallenge('growth')">
-                        <strong>Wachstum und Skalierung</strong><br>
-                        <small>Neue Mandanten gewinnen, Prozesse skalieren</small>
-                    </button>
-                </div>
+            
+            <div class="question-number">Frage 5 von 8</div>
+            <h2 id="q2-title">Wie kommunizieren Sie hauptsächlich mit Ihren Mandanten?</h2>
+            <p class="subtitle" id="q2-subtitle">Dies hilft uns zu verstehen, wie digital Ihre Mandantenkommunikation bereits ist.</p>
+            
+            <div id="q2-options">
+                <!-- Wird dynamisch gefüllt -->
             </div>
+            
+            <button class="btn-primary" onclick="goToScreen(7)" disabled id="q2-next-btn">Weiter</button>
         </div>
 
-        <!-- Neue Frage 5: KI-Erfahrung -->
-        <div id="ai-experience" class="screen">
+        <!-- Screen 7: Dynamische Frage 3 -->
+        <div id="screen-7" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 66%"></div>
+                <div class="progress" style="width: 75%"></div>
             </div>
-            <div class="question-container">
-                <h2>Welche Erfahrungen haben Sie bereits mit KI-Tools gemacht?</h2>
-                <p class="explanation">Ihre bisherigen Erfahrungen helfen uns, die richtige Einstiegsstrategie zu empfehlen.</p>
-                <div class="options-vertical">
-                    <button class="option-btn" onclick="selectAIExperience('none')">
-                        <strong>Noch keine Erfahrungen</strong><br>
-                        <small>KI ist für uns noch Neuland</small>
-                    </button>
-                    <button class="option-btn" onclick="selectAIExperience('basic')">
-                        <strong>Erste Versuche</strong><br>
-                        <small>ChatGPT ausprobiert, aber nicht systematisch genutzt</small>
-                    </button>
-                    <button class="option-btn" onclick="selectAIExperience('regular')">
-                        <strong>Regelmäßige Nutzung</strong><br>
-                        <small>Nutzen bereits KI-Tools für bestimmte Aufgaben</small>
-                    </button>
-                    <button class="option-btn" onclick="selectAIExperience('advanced')">
-                        <strong>Fortgeschrittene Nutzung</strong><br>
-                        <small>KI ist bereits fester Bestandteil unserer Arbeitsweise</small>
-                    </button>
-                </div>
+            
+            <div class="question-number">Frage 6 von 8</div>
+            <h2 id="q3-title">Was ist Ihre größte Herausforderung?</h2>
+            <p class="subtitle" id="q3-subtitle">Identifizieren Sie den Bereich mit dem größten Verbesserungspotenzial.</p>
+            
+            <div id="q3-options">
+                <!-- Wird dynamisch gefüllt -->
             </div>
+            
+            <button class="btn-primary" onclick="goToScreen(8)" disabled id="q3-next-btn">Weiter</button>
         </div>
 
-        <!-- Hauptfrage: Pfad-Auswahl -->
-        <div id="main-question" class="screen">
+        <!-- Screen 8: Dynamische Frage 4 -->
+        <div id="screen-8" class="screen">
             <div class="progress-bar">
-                <div class="progress" style="width: 74%"></div>
+                <div class="progress" style="width: 87%"></div>
             </div>
-            <div class="question-container">
-                <h2 id="personalizedMainQuestion">Wenn Sie einen Bereich Ihrer Kanzlei sofort verbessern könnten, welcher wäre das?</h2>
-                <div class="options-vertical">
-                    <button class="option-btn-large" onclick="selectPath('workflow')">
-                        <div class="option-content">
-                            <span class="option-icon">⚙️</span>
-                            <div class="option-text">
-                                <strong>Die internen Abläufe beschleunigen</strong>
-                                <p>Verwaltungsaufwand reduzieren und Effizienz steigern</p>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="option-btn-large" onclick="selectPath('communication')">
-                        <div class="option-content">
-                            <span class="option-icon">📞</span>
-                            <div class="option-text">
-                                <strong>Die Erreichbarkeit für Mandanten verbessern</strong>
-                                <p>Das Team entlasten und Service optimieren</p>
-                            </div>
-                        </div>
-                    </button>
-                    <button class="option-btn-large" onclick="selectPath('legal')">
-                        <div class="option-content">
-                            <span class="option-icon">⚖️</span>
-                            <div class="option-text">
-                                <strong>Recherche und Schriftsätze effizienter gestalten</strong>
-                                <p>Fachliche Arbeit optimieren und Zeit sparen</p>
-                            </div>
-                        </div>
-                    </button>
-                </div>
+            
+            <div class="question-number">Frage 7 von 8</div>
+            <h2 id="q4-title">Wie ist Ihr aktueller Erfahrungsstand mit KI-Tools?</h2>
+            <p class="subtitle" id="q4-subtitle">Dies hilft uns, Empfehlungen auf Ihrem Niveau zu geben.</p>
+            
+            <div id="q4-options">
+                <!-- Wird dynamisch gefüllt -->
             </div>
+            
+            <button class="btn-primary" onclick="goToScreen(9)" disabled id="q4-next-btn">Weiter</button>
         </div>
 
-        <!-- Workflow-Pfad -->
-        <div id="workflow-path" class="screen">
-            <div class="progress-bar">
-                <div class="progress" style="width: 82%"></div>
-            </div>
-            <div class="question-container">
-                <h2 id="workflowDetailQuestion">Welche dieser Aufgaben frisst aktuell die meiste Zeit?</h2>
-                <div class="options-vertical" id="workflowOptions">
-                    <!-- Optionen werden dynamisch basierend auf practiceType geladen -->
-                    <button class="option-btn" onclick="selectWorkflowDetail('mandanten')">Die Anlage neuer Mandanten und Akten in unseren Systemen</button>
-                    <button class="option-btn" onclick="selectWorkflowDetail('fristen')">Die Überwachung von Fristen und Wiedervorlagen</button>
-                    <button class="option-btn" onclick="selectWorkflowDetail('termine')">Die Planung und Koordination von Terminen</button>
-                    <button class="option-btn" onclick="selectWorkflowDetail('dokumente')">Die Erstellung und Verwaltung von Standarddokumenten</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Kommunikations-Pfad -->
-        <div id="communication-path" class="screen">
-            <div class="progress-bar">
-                <div class="progress" style="width: 82%"></div>
-            </div>
-            <div class="question-container">
-                <h2 id="communicationDetailQuestion">Was ist dabei die größte Herausforderung für Ihr Team?</h2>
-                <div class="options-vertical" id="communicationOptions">
-                    <!-- Optionen werden dynamisch basierend auf practiceType geladen -->
-                    <button class="option-btn" onclick="selectCommunicationDetail('unterbrechungen')">Wir werden oft durch Anrufe mit Standardfragen aus der konzentrierten Arbeit gerissen</button>
-                    <button class="option-btn" onclick="selectCommunicationDetail('erreichbarkeit')">Mandanten beschweren sich über mangelnde Erreichbarkeit außerhalb der Geschäftszeiten</button>
-                    <button class="option-btn" onclick="selectCommunicationDetail('termine')">Die telefonische Terminvereinbarung ist ein ständiges Hin und Her</button>
-                    <button class="option-btn" onclick="selectCommunicationDetail('information')">Mandanten fragen immer wieder nach dem gleichen Sachstand</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Rechtlicher Pfad -->
-        <div id="legal-path" class="screen">
-            <div class="progress-bar">
-                <div class="progress" style="width: 82%"></div>
-            </div>
-            <div class="question-container">
-                <h2 id="legalDetailQuestion">Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?</h2>
-                <div class="options-vertical" id="legalOptions">
-                    <!-- Optionen werden dynamisch basierend auf practiceType geladen -->
-                    <button class="option-btn" onclick="selectLegalDetail('recherche')">Bei der Recherche nach ähnlichen, bereits bearbeiteten Fällen in unserer eigenen Datenbank</button>
-                    <button class="option-btn" onclick="selectLegalDetail('rechtsprechung')">Bei der Suche nach aktueller, externer Rechtsprechung zu einem Fall</button>
-                    <button class="option-btn" onclick="selectLegalDetail('formulierung')">Beim Formulieren des Antwortschreibens im einheitlichen Kanzleistil</button>
-                    <button class="option-btn" onclick="selectLegalDetail('analyse')">Bei der Analyse und Bewertung komplexer Rechtsfragen</button>
-                </div>
-            </div>
-        </div>
-
-        <!-- E-Mail Eingabe -->
-        <div id="email-screen" class="screen">
-            <div class="progress-bar">
-                <div class="progress" style="width: 92%"></div>
-            </div>
-            <div class="question-container">
-                <h2 id="personalizedEmailTitle">Fast geschafft!</h2>
-                <p class="explanation">Ihre persönliche KI-Potenzialanalyse wird gerade basierend auf Ihren Antworten erstellt. An welche E-Mail-Adresse dürfen wir Ihre maßgeschneiderten Handlungsempfehlungen senden?</p>
-                <input type="email" id="userEmail" placeholder="Ihre E-Mail-Adresse" class="input-field">
-                <button class="btn-primary" onclick="generateResults()" disabled id="emailNext">Analyse jetzt anfordern</button>
-            </div>
-        </div>
-
-        <!-- Ergebnis-Bildschirm -->
-        <div id="results-screen" class="screen">
+        <!-- Screen 9: E-Mail -->
+        <div id="screen-9" class="screen">
             <div class="progress-bar">
                 <div class="progress" style="width: 100%"></div>
             </div>
-            <div class="question-container">
-                <h2 id="resultsTitle">Vielen Dank für Ihre Teilnahme!</h2>
-                <div class="results-content">
-                    <div class="success-message">
-                        <span class="success-icon">✅</span>
-                        <p>Ihre personalisierte KI-Potenzialanalyse wurde erfolgreich erstellt und an <strong id="confirmEmail"></strong> gesendet.</p>
-                    </div>
-                    <div class="next-steps">
-                        <h3>Was passiert als Nächstes?</h3>
-                        <ul>
-                            <li>Sie erhalten in wenigen Minuten eine E-Mail mit Ihrer detaillierten Analyse</li>
-                            <li>Unsere Experten werden sich in den nächsten 24 Stunden bei Ihnen melden</li>
-                            <li>Gemeinsam besprechen wir die für Sie passenden Lösungen</li>
-                        </ul>
-                    </div>
-                    <div class="contact-info">
-                        <p><strong>Haben Sie Fragen?</strong></p>
-                        <p>Kontaktieren Sie uns direkt: <a href="mailto:kontakt@webnativ.de">kontakt@webnativ.de</a></p>
-                    </div>
-                    <div class="legal-links">
-                        <a href="https://webnativ.de/impressum/" target="_blank">Impressum</a>
-                        <span class="separator">|</span>
-                        <a href="https://webnativ.de/datenschutzerklaerung/" target="_blank">Datenschutzerklärung</a>
-                    </div>
-                </div>
+            
+            <div class="question-number">Frage 8 von 8</div>
+            <h2 id="email-title">Fast geschafft!</h2>
+            <p class="subtitle">Geben Sie Ihre E-Mail-Adresse ein, um Ihre personalisierte KI-Potenzialanalyse zu erhalten.</p>
+            
+            <div style="margin-bottom: 20px;">
+                <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">E-Mail-Adresse</label>
+                <input type="email" id="email" placeholder="ihre.email@kanzlei.de" class="input-field" onkeyup="checkEmailForm()">
             </div>
+            
+            <button class="btn-primary" onclick="submitQuiz()" disabled id="email-next-btn">Analyse erhalten</button>
+        </div>
+
+        <!-- Screen 10: Erfolg -->
+        <div id="screen-10" class="screen">
+            <h2>🎉 Vielen Dank!</h2>
+            <p class="subtitle">Ihre personalisierte KI-Potenzialanalyse wird in wenigen Minuten an Ihre E-Mail-Adresse gesendet.</p>
+            
+            <div style="background: #f8f9ff; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: left;">
+                <h3>Ihre Angaben:</h3>
+                <div id="final-results"></div>
+            </div>
+            
+            <div style="margin-top: 30px;">
+                <p style="color: #666; font-size: 0.9em;">
+                    <a href="https://webnativ.de/impressum/" target="_blank" style="color: #667eea;">Impressum</a> | 
+                    <a href="https://webnativ.de/datenschutzerklaerung/" target="_blank" style="color: #667eea;">Datenschutzerklärung</a>
+                </p>
+                <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                    Kontakt: <a href="mailto:kontakt@webnativ.de" style="color: #667eea;">kontakt@webnativ.de</a>
+                </p>
+            </div>
+            
+            <button class="btn-primary" onclick="restart()">Neues Quiz starten</button>
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Globale Variablen
+        let currentScreenNum = 1;
+        let quizData = {
+            anrede: '',
+            firstName: '',
+            lastName: '',
+            companyType: '',
+            teamSize: '',
+            q1Answer: '',
+            q2Answer: '',
+            q3Answer: '',
+            q4Answer: '',
+            email: ''
+        };
+
+        // Dynamische Fragen basierend auf Kanzlei-Typ
+        const questions = {
+            tax: {
+                q1: {
+                    title: "Wie viel Zeit verbringen Sie täglich mit Belegen und Dateneingabe?",
+                    subtitle: "Steuerberater verbringen oft viel Zeit mit der manuellen Erfassung von Belegen und Daten.",
+                    options: [
+                        { value: "low", text: "Weniger als 2 Stunden", desc: "Bereits gut digitalisiert" },
+                        { value: "medium", text: "2-4 Stunden", desc: "Mittlerer Aufwand" },
+                        { value: "high", text: "Mehr als 4 Stunden", desc: "Hoher manueller Aufwand" }
+                    ]
+                },
+                q2: {
+                    title: "Wie übermitteln Ihre Mandanten hauptsächlich ihre Unterlagen?",
+                    subtitle: "Die Art der Datenübermittlung beeinflusst Ihren Arbeitsaufwand erheblich.",
+                    options: [
+                        { value: "digital", text: "Digital (E-Mail, Portal, App)", desc: "Moderne Übermittlung" },
+                        { value: "mixed", text: "Gemischt (digital und physisch)", desc: "Teilweise digitalisiert" },
+                        { value: "physical", text: "Hauptsächlich physisch (Post, persönlich)", desc: "Traditionelle Übermittlung" }
+                    ]
+                },
+                q3: {
+                    title: "Was ist Ihre größte Herausforderung in der Steuerberatung?",
+                    subtitle: "Identifizieren Sie den Bereich mit dem größten Verbesserungspotenzial.",
+                    options: [
+                        { value: "deadlines", text: "Fristen und Termine einhalten", desc: "Zeitmanagement-Probleme" },
+                        { value: "data-entry", text: "Dateneingabe und -verarbeitung", desc: "Manuelle Prozesse" },
+                        { value: "client-communication", text: "Mandantenkommunikation", desc: "Kommunikationsaufwand" },
+                        { value: "compliance", text: "Aktuelle Gesetze und Vorschriften", desc: "Rechtliche Komplexität" }
+                    ]
+                },
+                q4: {
+                    title: "Welche KI-Tools haben Sie bereits in der Steuerberatung getestet?",
+                    subtitle: "Dies hilft uns, Empfehlungen auf Ihrem Erfahrungsstand zu geben.",
+                    options: [
+                        { value: "none", text: "Noch keine KI-Tools verwendet", desc: "Einsteiger" },
+                        { value: "basic", text: "ChatGPT oder ähnliche für Texte", desc: "Grundkenntnisse" },
+                        { value: "specialized", text: "Spezialisierte Steuer-Software mit KI", desc: "Fortgeschritten" },
+                        { value: "advanced", text: "Mehrere KI-Tools regelmäßig", desc: "Experte" }
+                    ]
+                }
+            },
+            law: {
+                q1: {
+                    title: "Wie viel Zeit verbringen Sie täglich mit Recherche und Dokumentenerstellung?",
+                    subtitle: "Rechtsanwälte investieren oft viel Zeit in Recherche und das Verfassen von Schriftsätzen.",
+                    options: [
+                        { value: "low", text: "Weniger als 2 Stunden", desc: "Effiziente Arbeitsweise" },
+                        { value: "medium", text: "2-4 Stunden", desc: "Mittlerer Aufwand" },
+                        { value: "high", text: "Mehr als 4 Stunden", desc: "Hoher Recherche-Aufwand" }
+                    ]
+                },
+                q2: {
+                    title: "Wie kommunizieren Sie hauptsächlich mit Ihren Mandanten?",
+                    subtitle: "Die Kommunikationsart beeinflusst Ihre Effizienz und Mandantenzufriedenheit.",
+                    options: [
+                        { value: "digital", text: "Digital (E-Mail, Videokonferenz, Portal)", desc: "Moderne Kommunikation" },
+                        { value: "mixed", text: "Gemischt (digital und persönlich)", desc: "Hybride Kommunikation" },
+                        { value: "traditional", text: "Hauptsächlich persönlich/telefonisch", desc: "Traditionelle Kommunikation" }
+                    ]
+                },
+                q3: {
+                    title: "Was ist Ihre größte Herausforderung in der Rechtsberatung?",
+                    subtitle: "Identifizieren Sie den Bereich mit dem größten Verbesserungspotenzial.",
+                    options: [
+                        { value: "research", text: "Juristische Recherche", desc: "Zeitaufwändige Fallrecherche" },
+                        { value: "document-creation", text: "Schriftsatz-Erstellung", desc: "Dokumentenerstellung" },
+                        { value: "case-management", text: "Fallverwaltung und Termine", desc: "Organisatorische Herausforderungen" },
+                        { value: "client-acquisition", text: "Mandantengewinnung", desc: "Marketing und Akquise" }
+                    ]
+                },
+                q4: {
+                    title: "Welche KI-Tools haben Sie bereits in der Rechtsberatung getestet?",
+                    subtitle: "Dies hilft uns, Empfehlungen auf Ihrem Erfahrungsstand zu geben.",
+                    options: [
+                        { value: "none", text: "Noch keine KI-Tools verwendet", desc: "Einsteiger" },
+                        { value: "basic", text: "ChatGPT für Textentwürfe", desc: "Grundkenntnisse" },
+                        { value: "legal", text: "Juristische KI-Tools (Recherche, Analyse)", desc: "Fortgeschritten" },
+                        { value: "advanced", text: "Mehrere KI-Tools regelmäßig", desc: "Experte" }
+                    ]
+                }
+            },
+            mixed: {
+                q1: {
+                    title: "Wie viel Zeit verbringen Sie täglich mit Routineaufgaben?",
+                    subtitle: "Sowohl Steuer- als auch Rechtsberatung haben viele routinemäßige Tätigkeiten.",
+                    options: [
+                        { value: "low", text: "Weniger als 2 Stunden", desc: "Bereits gut optimiert" },
+                        { value: "medium", text: "2-4 Stunden", desc: "Mittlerer Aufwand" },
+                        { value: "high", text: "Mehr als 4 Stunden", desc: "Hoher Routineaufwand" }
+                    ]
+                },
+                q2: {
+                    title: "Wie kommunizieren Sie mit Ihren Mandanten?",
+                    subtitle: "Die Kommunikationsart variiert oft zwischen Steuer- und Rechtsmandaten.",
+                    options: [
+                        { value: "digital", text: "Überwiegend digital", desc: "E-Mail, Portal, Videokonferenz" },
+                        { value: "mixed", text: "Je nach Mandatsart unterschiedlich", desc: "Flexible Kommunikation" },
+                        { value: "traditional", text: "Überwiegend traditionell", desc: "Persönlich, telefonisch, Post" }
+                    ]
+                },
+                q3: {
+                    title: "Was ist Ihre größte Herausforderung in der gemischten Kanzlei?",
+                    subtitle: "Gemischte Kanzleien haben oft spezielle organisatorische Herausforderungen.",
+                    options: [
+                        { value: "specialization", text: "Balance zwischen beiden Bereichen", desc: "Spezialisierung vs. Breite" },
+                        { value: "efficiency", text: "Effiziente Prozesse für beide Bereiche", desc: "Prozessoptimierung" },
+                        { value: "technology", text: "Einheitliche IT-Lösungen", desc: "Technische Integration" },
+                        { value: "growth", text: "Skalierung und Wachstum", desc: "Expansion und Entwicklung" }
+                    ]
+                },
+                q4: {
+                    title: "Welche KI-Tools haben Sie bereits getestet?",
+                    subtitle: "Dies hilft uns, passende Empfehlungen für beide Bereiche zu geben.",
+                    options: [
+                        { value: "none", text: "Noch keine KI-Tools verwendet", desc: "Einsteiger" },
+                        { value: "basic", text: "Allgemeine Tools (ChatGPT, etc.)", desc: "Grundkenntnisse" },
+                        { value: "specialized", text: "Spezialisierte Tools für einen Bereich", desc: "Teilweise fortgeschritten" },
+                        { value: "advanced", text: "KI-Tools für beide Bereiche", desc: "Fortgeschritten" }
+                    ]
+                }
+            }
+        };
+
+        // Debug-Update
+        function updateDebug() {
+            document.getElementById('current-screen').textContent = currentScreenNum;
+            document.getElementById('company-type').textContent = quizData.companyType || '-';
+            document.getElementById('progress').textContent = Math.round((currentScreenNum - 1) / 9 * 100) + '%';
+        }
+
+        // Screen wechseln
+        function goToScreen(screenNumber) {
+            console.log('goToScreen:', screenNumber);
+            
+            // Aktuellen Screen verstecken
+            document.getElementById('screen-' + currentScreenNum).classList.remove('active');
+            
+            // Neuen Screen anzeigen
+            document.getElementById('screen-' + screenNumber).classList.add('active');
+            currentScreenNum = screenNumber;
+            
+            // Dynamische Fragen laden wenn nötig
+            if (screenNumber >= 5 && screenNumber <= 8 && quizData.companyType) {
+                loadDynamicQuestion(screenNumber - 4);
+            }
+            
+            // E-Mail-Titel personalisieren
+            if (screenNumber === 9) {
+                const emailTitle = document.getElementById('email-title');
+                const fullName = quizData.anrede && quizData.lastName ? 
+                    `${quizData.anrede} ${quizData.lastName}` : 
+                    (quizData.firstName || 'Fast geschafft!');
+                emailTitle.textContent = `Fast geschafft, ${fullName}!`;
+            }
+            
+            updateDebug();
+        }
+
+        // Dynamische Fragen laden
+        function loadDynamicQuestion(questionNum) {
+            const questionKey = 'q' + questionNum;
+            const questionData = questions[quizData.companyType][questionKey];
+            
+            // Titel und Untertitel setzen
+            document.getElementById(questionKey + '-title').textContent = questionData.title;
+            document.getElementById(questionKey + '-subtitle').textContent = questionData.subtitle;
+            
+            // Optionen erstellen
+            const optionsContainer = document.getElementById(questionKey + '-options');
+            optionsContainer.innerHTML = '';
+            
+            questionData.options.forEach(option => {
+                const button = document.createElement('button');
+                button.className = 'option-btn';
+                button.onclick = () => selectDynamicAnswer(questionKey, option.value, button);
+                button.innerHTML = `<strong>${option.text}</strong><br><small>${option.desc}</small>`;
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Anrede auswählen
+        function selectAnrede(anrede, button) {
+            document.querySelectorAll('.anrede-btn').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            quizData.anrede = anrede;
+            checkNameForm();
+        }
+
+        // Kanzlei-Typ auswählen
+        function selectCompanyType(type, button) {
+            document.querySelectorAll('#screen-3 .option-btn').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            quizData.companyType = type;
+            document.getElementById('type-next-btn').disabled = false;
+            updateDebug();
+        }
+
+        // Team-Größe auswählen
+        function selectTeamSize(size, button) {
+            document.querySelectorAll('#screen-4 .option-btn').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            quizData.teamSize = size;
+            document.getElementById('team-next-btn').disabled = false;
+        }
+
+        // Dynamische Antwort auswählen
+        function selectDynamicAnswer(questionKey, value, button) {
+            const screenId = 'screen-' + (parseInt(questionKey.replace('q', '')) + 4);
+            document.querySelectorAll('#' + screenId + ' .option-btn').forEach(btn => btn.classList.remove('selected'));
+            button.classList.add('selected');
+            quizData[questionKey + 'Answer'] = value;
+            document.getElementById(questionKey + '-next-btn').disabled = false;
+        }
+
+        // Namensformular prüfen
+        function checkNameForm() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            
+            quizData.firstName = firstName;
+            quizData.lastName = lastName;
+            
+            const isValid = quizData.anrede && firstName.length >= 2 && lastName.length >= 2;
+            document.getElementById('name-next-btn').disabled = !isValid;
+        }
+
+        // E-Mail-Formular prüfen
+        function checkEmailForm() {
+            const email = document.getElementById('email').value.trim();
+            quizData.email = email;
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            const isValid = emailRegex.test(email);
+            document.getElementById('email-next-btn').disabled = !isValid;
+        }
+
+        // Quiz abschicken
+        function submitQuiz() {
+            console.log('Quiz-Daten:', quizData);
+            
+            // Hier würde der Webhook-Aufruf stattfinden
+            // makeWebhookCall(quizData);
+            
+            showFinalResults();
+            goToScreen(10);
+        }
+
+        // Finale Ergebnisse anzeigen
+        function showFinalResults() {
+            const resultDiv = document.getElementById('final-results');
+            const companyTypeText = {
+                'tax': 'Steuerberatung',
+                'law': 'Rechtsberatung', 
+                'mixed': 'Gemischte Kanzlei'
+            };
+            
+            resultDiv.innerHTML = `
+                <strong>Name:</strong> ${quizData.anrede} ${quizData.firstName} ${quizData.lastName}<br>
+                <strong>Kanzlei-Typ:</strong> ${companyTypeText[quizData.companyType]}<br>
+                <strong>Team-Größe:</strong> ${quizData.teamSize} Mitarbeiter<br>
+                <strong>E-Mail:</strong> ${quizData.email}<br>
+                <strong>Antworten:</strong> ${Object.keys(quizData).filter(key => key.includes('Answer')).length} Fragen beantwortet
+            `;
+        }
+
+        // Neu starten
+        function restart() {
+            currentScreenNum = 1;
+            quizData = {
+                anrede: '', firstName: '', lastName: '', companyType: '', teamSize: '',
+                q1Answer: '', q2Answer: '', q3Answer: '', q4Answer: '', email: ''
+            };
+            
+            // Alle Screens verstecken
+            document.querySelectorAll('.screen').forEach(screen => screen.classList.remove('active'));
+            document.getElementById('screen-1').classList.add('active');
+            
+            // Formulare zurücksetzen
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('email').value = '';
+            document.querySelectorAll('.selected').forEach(btn => btn.classList.remove('selected'));
+            document.querySelectorAll('.btn-primary[disabled]').forEach(btn => btn.disabled = true);
+            
+            updateDebug();
+        }
+
+        // Webhook-Aufruf (für Make.com Integration)
+        function makeWebhookCall(data) {
+            const webhookUrl = 'https://hook.eu2.make.com/cud61m8feoass3rvfx464usyfalwf1zd';
+            
+            fetch(webhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Webhook erfolgreich:', data);
+            })
+            .catch(error => {
+                console.error('Webhook-Fehler:', error);
+            });
+        }
+
+        // Initialisierung
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Erweitertes Quiz geladen');
+            updateDebug();
+        });
+    </script>
 </body>
 </html>
