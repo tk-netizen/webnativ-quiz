@@ -24,24 +24,21 @@
             background: white;
             border-radius: 20px;
             box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            width: 95%;
-            max-width: 1000px;
-            min-height: 600px;
+            width: 90%;
+            max-width: 800px;
+            min-height: 500px;
             overflow: hidden;
         }
 
         .screen {
             display: none;
-            padding: 50px 60px;
+            padding: 40px;
             text-align: center;
-            min-height: 600px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
+            min-height: 500px;
         }
 
         .screen.active {
-            display: flex;
+            display: block;
         }
 
         .progress-bar {
@@ -198,13 +195,11 @@
         }
 
         .benefits {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin: 50px 0;
-            max-width: 900px;
-            margin-left: auto;
-            margin-right: auto;
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            flex-wrap: wrap;
+            gap: 20px;
         }
 
         .benefit-item {
@@ -212,16 +207,17 @@
             flex-direction: column;
             align-items: center;
             text-align: center;
-            padding: 30px 25px;
+            flex: 1;
+            min-width: 200px;
+            padding: 20px;
             background: #f8f9ff;
             border-radius: 15px;
             border: 2px solid #e8ecff;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
         .benefit-item:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.15);
         }
 
         .benefit-item .icon {
@@ -249,59 +245,29 @@
             margin-bottom: 10px;
         }
 
-        /* Desktop-Optimierungen */
+        /* Desktop-Optimierungen für Querformat */
         @media (min-width: 1200px) {
             .container {
-                max-width: 1200px;
-                min-height: 700px;
-            }
-            
-            .screen {
-                padding: 60px 80px;
-                min-height: 700px;
-            }
-            
-            h1 {
-                font-size: 2.8em;
-                margin-bottom: 15px;
-            }
-            
-            h2 {
-                font-size: 2.2em;
-                margin-bottom: 25px;
-            }
-            
-            .subtitle {
-                font-size: 1.3em;
-                margin-bottom: 40px;
-                max-width: 800px;
-                margin-left: auto;
-                margin-right: auto;
-            }
-            
-            .benefits {
-                grid-template-columns: repeat(3, 1fr);
-                gap: 40px;
-                margin: 60px 0;
-            }
-            
-            .options-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 25px;
                 max-width: 900px;
             }
             
-            .form-container {
+            .screen {
+                padding: 50px;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            h2 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1.2em;
                 max-width: 700px;
-            }
-            
-            .benefit-item {
-                padding: 40px 30px;
-            }
-            
-            .benefit-item .icon {
-                font-size: 3.5em;
-                margin-bottom: 20px;
+                margin-left: auto;
+                margin-right: auto;
             }
         }
 
@@ -452,22 +418,20 @@
             <h2>In welchem Bereich ist Ihre Kanzlei hauptsächlich tätig?</h2>
             <p class="subtitle">Diese Information hilft uns, die folgenden Fragen optimal auf Ihre Branche anzupassen.</p>
             
-            <div class="options-grid">
-                <button class="option-btn" onclick="selectCompanyType('tax', this)">
-                    <strong>📊 Steuerberatung</strong><br>
-                    <small>Steuerberatung, Buchhaltung, Jahresabschlüsse, Lohnabrechnung</small>
-                </button>
-                
-                <button class="option-btn" onclick="selectCompanyType('law', this)">
-                    <strong>⚖️ Rechtsberatung</strong><br>
-                    <small>Rechtsberatung, Prozessführung, Vertragsrecht, Familienrecht</small>
-                </button>
-                
-                <button class="option-btn" onclick="selectCompanyType('mixed', this)">
-                    <strong>🏢 Gemischte Kanzlei</strong><br>
-                    <small>Sowohl Steuerberatung als auch Rechtsberatung</small>
-                </button>
-            </div>
+            <button class="option-btn" onclick="selectCompanyType('tax', this)">
+                <strong>📊 Steuerberatung</strong><br>
+                <small>Steuerberatung, Buchhaltung, Jahresabschlüsse, Lohnabrechnung</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectCompanyType('law', this)">
+                <strong>⚖️ Rechtsberatung</strong><br>
+                <small>Rechtsberatung, Prozessführung, Vertragsrecht, Familienrecht</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectCompanyType('mixed', this)">
+                <strong>🏢 Gemischte Kanzlei</strong><br>
+                <small>Sowohl Steuerberatung als auch Rechtsberatung</small>
+            </button>
             
             <button class="btn-primary" onclick="goToScreen(4)" disabled id="type-next-btn">Weiter</button>
         </div>
@@ -482,27 +446,25 @@
             <h2>Wie viele Mitarbeiter hat Ihre Kanzlei?</h2>
             <p class="subtitle">Dies hilft uns, passende Lösungen für Ihre Kanzleigröße zu empfehlen.</p>
             
-            <div class="options-grid">
-                <button class="option-btn" onclick="selectTeamSize('1-2', this)">
-                    <strong>1-2 Mitarbeiter</strong><br>
-                    <small>Einzelkanzlei oder sehr kleine Praxis</small>
-                </button>
-                
-                <button class="option-btn" onclick="selectTeamSize('3-5', this)">
-                    <strong>3-5 Mitarbeiter</strong><br>
-                    <small>Kleine Kanzlei mit wenigen Angestellten</small>
-                </button>
-                
-                <button class="option-btn" onclick="selectTeamSize('6-15', this)">
-                    <strong>6-15 Mitarbeiter</strong><br>
-                    <small>Mittelgroße Kanzlei</small>
-                </button>
-                
-                <button class="option-btn" onclick="selectTeamSize('16+', this)">
-                    <strong>16+ Mitarbeiter</strong><br>
-                    <small>Große Kanzlei oder Sozietät</small>
-                </button>
-            </div>
+            <button class="option-btn" onclick="selectTeamSize('1-2', this)">
+                <strong>1-2 Mitarbeiter</strong><br>
+                <small>Einzelkanzlei oder sehr kleine Praxis</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectTeamSize('3-5', this)">
+                <strong>3-5 Mitarbeiter</strong><br>
+                <small>Kleine Kanzlei mit wenigen Angestellten</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectTeamSize('6-15', this)">
+                <strong>6-15 Mitarbeiter</strong><br>
+                <small>Mittelgroße Kanzlei</small>
+            </button>
+            
+            <button class="option-btn" onclick="selectTeamSize('16+', this)">
+                <strong>16+ Mitarbeiter</strong><br>
+                <small>Große Kanzlei oder Sozietät</small>
+            </button>
             
             <button class="btn-primary" onclick="goToScreen(5)" disabled id="team-next-btn">Weiter</button>
         </div>
