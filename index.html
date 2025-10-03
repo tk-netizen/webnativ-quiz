@@ -57,12 +57,12 @@
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Vorname</label>
-                    <input type="text" id="firstName" placeholder="z.B. Maria" class="input-field">
+                    <input type="text" id="firstName" placeholder="z.B. Maria" class="input-field" oninput="updateFirstName(this.value)">
                 </div>
                 
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 10px; font-weight: 600; color: #333;">Nachname</label>
-                    <input type="text" id="lastName" placeholder="z.B. Dr. Schneider" class="input-field">
+                    <input type="text" id="lastName" placeholder="z.B. Dr. Schneider" class="input-field" oninput="updateLastName(this.value)">
                 </div>
                 
                 <button class="btn-primary" onclick="nextScreen()" disabled id="nameNext">Weiter</button>

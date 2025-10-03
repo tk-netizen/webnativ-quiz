@@ -321,6 +321,35 @@ function setupNameEventListeners() {
     });
 });
 
+// Direkte Funktionen für Namenseingabe
+function updateFirstName(value) {
+    quizData.firstName = value.trim();
+    checkNameFormValid();
+}
+
+function updateLastName(value) {
+    quizData.lastName = value.trim();
+    checkNameFormValid();
+}
+
+function checkNameFormValid() {
+    const hasAnrede = quizData.anrede && quizData.anrede.length > 0;
+    const hasFirstName = quizData.firstName && quizData.firstName.length >= 2;
+    const hasLastName = quizData.lastName && quizData.lastName.length >= 2;
+    
+    const nameNext = document.getElementById('nameNext');
+    if (nameNext) {
+        nameNext.disabled = !(hasAnrede && hasFirstName && hasLastName);
+    }
+    
+    // Vollständigen Namen generieren
+    if (hasFirstName && hasLastName) {
+        quizData.userName = `${quizData.firstName} ${quizData.lastName}`;
+    }
+    
+    console.log('Name validation:', { hasAnrede, hasFirstName, hasLastName, disabled: nameNext?.disabled });
+}
+
 // Anrede auswählen
 function selectAnrede(anrede) {
     // Alle Anrede-Buttons zurücksetzen
@@ -341,9 +370,9 @@ function selectAnrede(anrede) {
     quizData.anrede = anrede;
     
     // Formular-Validierung aktualisieren
-    validateNameForm();
+    checkNameFormValid();
     
-    console.log('Anrede ausgewählt:', anrede); // Debug-Log
+    console.log('Anrede ausgewählt:', anrede);
 }
 
 // Kanzlei-Art auswählen
