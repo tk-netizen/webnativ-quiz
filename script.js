@@ -40,7 +40,14 @@ const screens = [
 
 // Screen-Navigation
 function nextScreen() {
+    console.log('nextScreen called, currentScreen:', currentScreen, 'screenId:', screens[currentScreen]);
+    
     const current = document.getElementById(screens[currentScreen]);
+    if (!current) {
+        console.error('Current screen not found:', screens[currentScreen]);
+        return;
+    }
+    
     current.classList.remove('active');
     
     // Spezielle Logik für Pfad-Auswahl
@@ -60,8 +67,20 @@ function nextScreen() {
         currentScreen++;
     }
     
+    // Überprüfe ob der nächste Screen existiert
+    if (currentScreen >= screens.length) {
+        console.error('Screen index out of bounds:', currentScreen);
+        currentScreen = screens.length - 1;
+    }
+    
     const next = document.getElementById(screens[currentScreen]);
+    if (!next) {
+        console.error('Next screen not found:', screens[currentScreen]);
+        return;
+    }
+    
     next.classList.add('active');
+    console.log('Switched to screen:', screens[currentScreen]);
     
     // Event Listeners für neue Seite einrichten
     if (currentScreen === 1) { // Namenseingabe-Seite
