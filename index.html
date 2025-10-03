@@ -736,10 +736,10 @@
 
         // Quiz abschicken
         function submitQuiz() {
-            console.log('Quiz-Daten:', quizData);
+            console.log('Quiz-Daten werden gesendet:', quizData);
             
-            // Hier würde der Webhook-Aufruf stattfinden
-            // makeWebhookCall(quizData);
+            // Webhook-Aufruf an Make.com
+            makeWebhookCall(quizData);
             
             showFinalResults();
             goToScreen(10);
@@ -789,6 +789,8 @@
         function makeWebhookCall(data) {
             const webhookUrl = 'https://hook.eu2.make.com/cud61m8feoass3rvfx464usyfalwf1zd';
             
+            console.log('Sende Daten an Make.com:', data);
+            
             fetch(webhookUrl, {
                 method: 'POST',
                 headers: {
@@ -796,12 +798,24 @@
                 },
                 body: JSON.stringify(data)
             })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Webhook erfolgreich:', data);
+            .then(response => {
+                console.log('Webhook Response Status:', response.status);
+                if (response.ok) {
+                    return response.text(); // Make.com sendet oft nur Text zurück
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            })
+            .then(responseText => {
+                console.log('Webhook erfolgreich gesendet! Response:', responseText);
+                // Erfolgs-Feedback für den Benutzer
+                updateDebug();
+                document.getElementById('company-type').textContent = 'Daten gesendet ✅';
             })
             .catch(error => {
                 console.error('Webhook-Fehler:', error);
+                // Fehler-Feedback für den Benutzer
+                document.getElementById('company-type').textContent = 'Fehler beim Senden ❌';
             });
         }
 
