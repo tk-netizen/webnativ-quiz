@@ -442,22 +442,18 @@ function selectLegalDetail(detail) {
 
 // Ergebnisse generieren
 function generateResults() {
-    // E-Mail bestätigen
     document.getElementById('confirmEmail').textContent = quizData.userEmail;
-    
-    // Simuliere API-Call für die Ergebnisgenerierung
     console.log('Quiz-Daten für Make.com/GPT:', quizData);
     
-    // Hier würde normalerweise der Webhook zu Make.com ausgelöst werden
-    // makeWebhookCall(quizData);
+    // Webhook zu Make.com ausgelöst - AKTIVIERT
+    makeWebhookCall(quizData);
     
     nextScreen();
 }
 
-// Simulierte Make.com Webhook-Funktion
+// Make.com Webhook-Funktion - AKTIVIERT
 function makeWebhookCall(data) {
-    // In der echten Implementierung würde hier der Aufruf zu Make.com erfolgen
-    const webhookUrl = 'https://hook.eu1.make.com/your-webhook-url';
+    const webhookUrl = 'https://hook.eu2.make.com/cud61m8feoass3rvfx464usyfalwf1zd';
     
     fetch(webhookUrl, {
         method: 'POST',
