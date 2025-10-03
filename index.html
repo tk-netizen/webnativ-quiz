@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KI-Reifegrad-Check für Kanzleien | Webnativ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Willkommensseite -->
+        <div id="welcome-screen" class="screen active">
+            <div class="header">
+                <h1>Willkommen bei Ihrem persönlichen KI-Reifegrad-Check!</h1>
+                <p class="subtitle">In nur 3 Minuten analysieren wir gemeinsam Ihr digitales Potenzial und geben Ihnen drei konkrete Handlungsempfehlungen für Ihre Kanzlei.</p>
+            </div>
+            <div class="content">
+                <div class="benefits">
+                    <div class="benefit-item">
+                        <span class="icon">⚡</span>
+                        <span>Schnelle Analyse in 3 Minuten</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="icon">🎯</span>
+                        <span>Personalisierte Empfehlungen</span>
+                    </div>
+                    <div class="benefit-item">
+                        <span class="icon">🚀</span>
+                        <span>Konkrete Handlungsschritte</span>
+                    </div>
+                </div>
+                <button class="btn-primary" onclick="nextScreen()">Analyse starten</button>
+            </div>
+        </div>
+
+        <!-- Phase 1: Persönliche Daten -->
+        <div id="personal-data" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 20%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Wie dürfen wir Sie ansprechen?</h2>
+                <p class="explanation">Wir verwenden Ihren Namen, um die Analyse für Sie zu personalisieren.</p>
+                <input type="text" id="userName" placeholder="Ihr Name" class="input-field">
+                <button class="btn-primary" onclick="nextScreen()" disabled id="nameNext">Weiter</button>
+            </div>
+        </div>
+
+        <!-- Kanzlei-Informationen -->
+        <div id="company-info" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 40%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Für welche Kanzlei führen Sie die Analyse durch?</h2>
+                <p class="explanation">Die Angabe Ihrer Webseite hilft uns, unsere Vorschläge besser auf Ihre Kanzlei zuzuschneiden.</p>
+                <input type="text" id="companyName" placeholder="Name der Kanzlei" class="input-field">
+                <input type="url" id="website" placeholder="Webseite (optional)" class="input-field">
+                <button class="btn-primary" onclick="nextScreen()">Weiter</button>
+            </div>
+        </div>
+
+        <!-- Mitarbeiterzahl -->
+        <div id="team-size" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 60%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Wie viele Mitarbeiter hat Ihre Kanzlei?</h2>
+                <p class="explanation">Die Größe Ihrer Kanzlei beeinflusst, welche digitalen Lösungen den größten Hebel haben.</p>
+                <div class="options-grid">
+                    <button class="option-btn" onclick="selectTeamSize('1-5')">1-5 Mitarbeiter</button>
+                    <button class="option-btn" onclick="selectTeamSize('6-15')">6-15 Mitarbeiter</button>
+                    <button class="option-btn" onclick="selectTeamSize('16-50')">16-50 Mitarbeiter</button>
+                    <button class="option-btn" onclick="selectTeamSize('50+')">Mehr als 50 Mitarbeiter</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hauptfrage: Pfad-Auswahl -->
+        <div id="main-question" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 70%"></div>
+            </div>
+            <div class="question-container">
+                <h2 id="personalizedMainQuestion">Wenn Sie einen Bereich Ihrer Kanzlei sofort verbessern könnten, welcher wäre das?</h2>
+                <div class="options-vertical">
+                    <button class="option-btn-large" onclick="selectPath('workflow')">
+                        <div class="option-content">
+                            <span class="option-icon">⚙️</span>
+                            <div class="option-text">
+                                <strong>Die internen Abläufe beschleunigen</strong>
+                                <p>Verwaltungsaufwand reduzieren und Effizienz steigern</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="option-btn-large" onclick="selectPath('communication')">
+                        <div class="option-content">
+                            <span class="option-icon">📞</span>
+                            <div class="option-text">
+                                <strong>Die Erreichbarkeit für Mandanten verbessern</strong>
+                                <p>Das Team entlasten und Service optimieren</p>
+                            </div>
+                        </div>
+                    </button>
+                    <button class="option-btn-large" onclick="selectPath('legal')">
+                        <div class="option-content">
+                            <span class="option-icon">⚖️</span>
+                            <div class="option-text">
+                                <strong>Recherche und Schriftsätze effizienter gestalten</strong>
+                                <p>Fachliche Arbeit optimieren und Zeit sparen</p>
+                            </div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Workflow-Pfad -->
+        <div id="workflow-path" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 85%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Welche dieser Aufgaben frisst aktuell die meiste Zeit?</h2>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectWorkflowDetail('mandanten')">Die Anlage neuer Mandanten und Akten in unseren Systemen</button>
+                    <button class="option-btn" onclick="selectWorkflowDetail('fristen')">Die Überwachung von Fristen und Wiedervorlagen</button>
+                    <button class="option-btn" onclick="selectWorkflowDetail('termine')">Die Planung und Koordination von Terminen</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Kommunikations-Pfad -->
+        <div id="communication-path" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 85%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Was ist dabei die größte Herausforderung für Ihr Team?</h2>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectCommunicationDetail('unterbrechungen')">Wir werden oft durch Anrufe mit Standardfragen aus der konzentrierten Arbeit gerissen</button>
+                    <button class="option-btn" onclick="selectCommunicationDetail('erreichbarkeit')">Mandanten beschweren sich über mangelnde Erreichbarkeit außerhalb der Geschäftszeiten</button>
+                    <button class="option-btn" onclick="selectCommunicationDetail('termine')">Die telefonische Terminvereinbarung ist ein ständiges Hin und Her</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rechtlicher Pfad -->
+        <div id="legal-path" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 85%"></div>
+            </div>
+            <div class="question-container">
+                <h2>Wo sehen Sie den größten Hebel für eine Effizienzsteigerung?</h2>
+                <div class="options-vertical">
+                    <button class="option-btn" onclick="selectLegalDetail('recherche')">Bei der Recherche nach ähnlichen, bereits bearbeiteten Fällen in unserer eigenen Datenbank</button>
+                    <button class="option-btn" onclick="selectLegalDetail('rechtsprechung')">Bei der Suche nach aktueller, externer Rechtsprechung zu einem Fall</button>
+                    <button class="option-btn" onclick="selectLegalDetail('formulierung')">Beim Formulieren des Antwortschreibens im einheitlichen Kanzleistil</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- E-Mail Eingabe -->
+        <div id="email-screen" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 95%"></div>
+            </div>
+            <div class="question-container">
+                <h2 id="personalizedEmailTitle">Fast geschafft!</h2>
+                <p class="explanation">Ihre persönliche KI-Potenzialanalyse wird gerade basierend auf Ihren Antworten erstellt. An welche E-Mail-Adresse dürfen wir Ihre maßgeschneiderten Handlungsempfehlungen senden?</p>
+                <input type="email" id="userEmail" placeholder="Ihre E-Mail-Adresse" class="input-field">
+                <button class="btn-primary" onclick="generateResults()" disabled id="emailNext">Analyse jetzt anfordern</button>
+            </div>
+        </div>
+
+        <!-- Ergebnis-Bildschirm -->
+        <div id="results-screen" class="screen">
+            <div class="progress-bar">
+                <div class="progress" style="width: 100%"></div>
+            </div>
+            <div class="question-container">
+                <h2 id="resultsTitle">Vielen Dank für Ihre Teilnahme!</h2>
+                <div class="results-content">
+                    <div class="success-message">
+                        <span class="success-icon">✅</span>
+                        <p>Ihre personalisierte KI-Potenzialanalyse wurde erfolgreich erstellt und an <strong id="confirmEmail"></strong> gesendet.</p>
+                    </div>
+                    <div class="next-steps">
+                        <h3>Was passiert als Nächstes?</h3>
+                        <ul>
+                            <li>Sie erhalten in wenigen Minuten eine E-Mail mit Ihrer detaillierten Analyse</li>
+                            <li>Unsere Experten werden sich in den nächsten 24 Stunden bei Ihnen melden</li>
+                            <li>Gemeinsam besprechen wir die für Sie passenden Lösungen</li>
+                        </ul>
+                    </div>
+                    <div class="contact-info">
+                        <p><strong>Haben Sie Fragen?</strong></p>
+                        <p>Kontaktieren Sie uns direkt: <a href="mailto:info@webnativ.de">info@webnativ.de</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
