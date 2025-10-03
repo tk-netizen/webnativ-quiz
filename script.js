@@ -63,6 +63,11 @@ function nextScreen() {
     const next = document.getElementById(screens[currentScreen]);
     next.classList.add('active');
     
+    // Event Listeners für neue Seite einrichten
+    if (currentScreen === 1) { // Namenseingabe-Seite
+        setTimeout(() => setupNameEventListeners(), 100);
+    }
+    
     // Personalisierung aktualisieren
     updatePersonalization();
 }
@@ -240,34 +245,58 @@ function updateLegalOptions(practiceType) {
     }
 }
 
-// Event Listeners für Eingabefelder
-document.addEventListener('DOMContentLoaded', function() {
-    // Name-Eingabe
-    const firstNameInput = document.getElementById('firstName');
-    const lastNameInput = document.getElementById('lastName');
+// Globale Validierungsfunktion für Namensformular
+function validateNameForm() {
+    const hasAnrede = quizData.anrede.length > 0;
+    const hasFirstName = quizData.firstName.length >= 2;
+    const hasLastName = quizData.lastName.length >= 2;
     const nameNext = document.getElementById('nameNext');
     
-    function validateNameForm() {
-        const hasAnrede = quizData.anrede.length > 0;
-        const hasFirstName = quizData.firstName.length >= 2;
-        const hasLastName = quizData.lastName.length >= 2;
+    if (nameNext) {
         nameNext.disabled = !(hasAnrede && hasFirstName && hasLastName);
-        
-        // Vollständigen Namen generieren
-        if (hasFirstName && hasLastName) {
-            quizData.userName = `${quizData.firstName} ${quizData.lastName}`;
-        }
     }
     
-    firstNameInput.addEventListener('input', function() {
-        quizData.firstName = this.value.trim();
-        validateNameForm();
-    });
+    // Vollständigen Namen generieren
+    if (hasFirstName && hasLastName) {
+        quizData.userName = `${quizData.firstName} ${quizData.lastName}`;
+    }
     
-    lastNameInput.addEventListener('input', function() {
-        quizData.lastName = this.value.trim();
-        validateNameForm();
-    });
+    console.log('Validierung:', { hasAnrede, hasFirstName, hasLastName, disabled: nameNext?.disabled });
+}
+
+// Event Listeners für Eingabefelder
+document.addEventListener('DOMContentLoaded', function() {
+    // Name-Eingabe Event Listeners hinzufügen
+    setupNameEventListeners();
+});
+
+function setupNameEventListeners() {
+    const firstNameInput = document.getElementById('firstName');
+    const lastNameInput = document.getElementById('lastName');
+    
+    console.log('Setting up name event listeners:', { firstNameInput, lastNameInput });
+    
+    if (firstNameInput && !firstNameInput.hasAttribute('data-listener-added')) {
+        firstNameInput.addEventListener('input', function() {
+            quizData.firstName = this.value.trim();
+            console.log('Vorname geändert:', quizData.firstName);
+            validateNameForm();
+        });
+        firstNameInput.setAttribute('data-listener-added', 'true');
+    }
+    
+    if (lastNameInput && !lastNameInput.hasAttribute('data-listener-added')) {
+        lastNameInput.addEventListener('input', function() {
+            quizData.lastName = this.value.trim();
+            console.log('Nachname geändert:', quizData.lastName);
+            validateNameForm();
+        });
+        lastNameInput.setAttribute('data-listener-added', 'true');
+    }
+    
+    // Initiale Validierung
+    validateNameForm();
+}
     
     // Firmen-Eingabe
     const companyInput = document.getElementById('companyName');
@@ -312,12 +341,7 @@ function selectAnrede(anrede) {
     quizData.anrede = anrede;
     
     // Formular-Validierung aktualisieren
-    const firstNameInput = document.getElementById('firstName');
-    const lastNameInput = document.getElementById('lastName');
-    const nameNext = document.getElementById('nameNext');
-    const hasFirstName = firstNameInput.value.trim().length >= 2;
-    const hasLastName = lastNameInput.value.trim().length >= 2;
-    nameNext.disabled = !(anrede && hasFirstName && hasLastName);
+    validateNameForm();
     
     console.log('Anrede ausgewählt:', anrede); // Debug-Log
 }
